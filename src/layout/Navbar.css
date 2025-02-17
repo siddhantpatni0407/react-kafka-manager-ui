@@ -1,0 +1,9 @@
+.links-container {
+    display: flex;
+    margin-right: 10px; /* Add margin between links */
+  }
+  
+  .navbar-brand {
+    margin-right: 20px; /* Add margin between links */
+  }
+  

@@ -31,13 +31,13 @@ const Navbar = () => {
         <Link to="/about" style={styles.link}>About</Link>
         <Link to="/contact" style={styles.link}>Contact</Link>
       </div>
-      <h2>Kafka Manager</h2>
-      <div className="d-flex align-items-center">
+      <h2 style={styles.title}>Kafka Manager</h2>
+      <div style={styles.rightContainer}>
         <p style={styles.time}>{currentTime}</p>
-        <button style={styles.button} onClick={handleRefresh} title="Refresh">
+        <button style={styles.iconButton} onClick={handleRefresh} title="Refresh">
           <FontAwesomeIcon icon={faSyncAlt} />
         </button>
-        <button style={styles.button} onClick={handleThemeChange} title="Toggle Theme">
+        <button style={styles.iconButton} onClick={handleThemeChange} title="Toggle Theme">
           <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} />
         </button>
       </div>
@@ -46,58 +46,73 @@ const Navbar = () => {
 };
 
 const styles = {
-    navbarLight: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "15px 20px",
-      background: "#f8f9fa",
-      color: "#000",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      borderBottom: "2px solid #ddd",
-    },
-    navbarDark: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "15px 20px",
-      background: "#222",
-      color: "#fff",
-      boxShadow: "0 4px 6px rgba(255, 255, 255, 0.1)",
-      borderBottom: "2px solid #444",
-    },
-    leftContainer: {
-      display: "flex",
-      gap: "20px",
-      alignItems: "center",
-    },
-    link: {
-      color: "#007bff",
-      textDecoration: "none",
-      fontWeight: "bold",
-      fontSize: "16px",
-      transition: "color 0.3s ease",
-    },
-    linkHover: {
-      color: "#0056b3",
-    },
-    time: {
-      marginRight: "10px",
-      fontWeight: "bold",
-      fontSize: "16px",
-    },
-    button: {
-      marginLeft: "10px",
-      padding: "8px 12px",
-      border: "none",
-      cursor: "pointer",
-      background: "transparent",
-      color: "inherit",
-      fontSize: "16px",
-      transition: "transform 0.2s ease",
-    },
-    buttonHover: {
-      transform: "scale(1.1)",
-    },
-  };
+  navbarLight: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px 25px",
+    background: "#f8f9fa",
+    color: "#000",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    borderBottom: "3px solid #ddd",
+    borderRadius: "10px",
+  },
+  navbarDark: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px 25px",
+    background: "#222",
+    color: "#fff",
+    boxShadow: "0 4px 8px rgba(255, 255, 255, 0.1)",
+    borderBottom: "3px solid #444",
+    borderRadius: "10px",
+  },
+  leftContainer: {
+    display: "flex",
+    gap: "25px",
+    alignItems: "center",
+  },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: "18px",
+    transition: "color 0.3s ease, transform 0.2s ease",
+  },
+  linkHover: {
+    color: "#0056b3",
+    transform: "scale(1.1)",
+  },
+  title: {
+    fontSize: "22px",
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+  },
+  rightContainer: {
+    display: "flex",
+    alignItems: "center",
+    gap: "15px",
+  },
+  time: {
+    fontWeight: "bold",
+    fontSize: "18px",
+    color: "#ff5733",
+  },
+  iconButton: {
+    padding: "8px 12px",
+    border: "none",
+    cursor: "pointer",
+    background: "transparent",
+    color: "inherit",
+    fontSize: "18px",
+    transition: "transform 0.2s ease, color 0.3s ease",
+  },
+  iconButtonHover: {
+    transform: "scale(1.1)",
+    color: "#007bff",
+  },
+};
+
 export default Navbar;

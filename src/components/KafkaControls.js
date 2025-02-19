@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_ENDPOINTS } from "./constants"; // Importing the updated constants file
 
@@ -26,6 +26,54 @@ const KafkaControls = () => {
   const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] = useState(false);
   const [kafkaUserDefinedPath, setKafkaUserDefinedPath] = useState("");
   const [setupKafkaResponse, setSetupKafkaResponse] = useState("");
+
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [message, setMessage] = useState("");
+  const [consumedMessages, setConsumedMessages] = useState("");
+
+  useEffect(() => {
+    fetchTopics();
+  }, []);
+
+  const fetchTopics = async () => {
+    try {
+      const response = await axios.get(API_ENDPOINTS.GET_TOPICS_URL);
+      setTopics(response.data);
+    } catch (error) {
+      setError("Failed to fetch topics");
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!selectedTopic || !message) {
+      alert("Please select a topic and enter a message.");
+      return;
+    }
+    try {
+      const response = await axios.get(API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL, {
+        params: { topicName: selectedTopic, message },
+      });
+      alert(response.data.status);
+    } catch (error) {
+      alert("Failed to send message.");
+    }
+  };
+
+  const consumeMessages = async () => {
+    if (!selectedTopic) {
+      alert("Please select a topic.");
+      return;
+    }
+    try {
+      const response = await axios.get(API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL, {
+        params: { topicName: selectedTopic },
+      });
+      setConsumedMessages(response.data.status);
+    } catch (error) {
+      console.error("Error consuming messages:", error);
+      alert("Failed to fetch messages.");
+    }
+};
   
   const handlePathChange = (event) => {
     setKafkaUserDefinedPath(event.target.value.trim()); // Store raw path
@@ -170,11 +218,13 @@ const KafkaControls = () => {
           <p style={styles.errorMessage}>{error}</p>
         </div>
       )}
-
+    
       <div style={styles.header}>
         {/* Kafka Logo */}
         <img src="/kafka-logo.png" alt="Kafka Logo" style={styles.logo} />
       </div>
+
+      <h2 style={styles.sectionHeader}>Kafka Manager</h2>
 
       {/* Setup Kafka Section (New Feature) */}
       <div style={styles.container}>
@@ -220,7 +270,7 @@ const KafkaControls = () => {
       {setupKafkaResponse && <p style={styles.responseMessage}>{setupKafkaResponse}</p>}
     </div>
 
-      {/* Start Kafka Section */}
+    {/* Start Kafka Section */}
       <div style={styles.section}>
         <h2 style={styles.sectionHeader}>Start Kafka Server</h2>
         <button
@@ -330,6 +380,35 @@ const KafkaControls = () => {
             </table>
           </div>
         )}
+      </div>
+      <div>
+      
+      {/* Push Kafka Message */}
+      <label>Select Topic:</label>
+      <select onChange={(e) => setSelectedTopic(e.target.value)} value={selectedTopic} style={styles.input}>
+        <option value="">-- Select a Topic --</option>
+        {topics.map((topic) => (
+          <option key={topic} value={topic}>{topic}</option>
+        ))}
+      </select>
+
+      <div style={styles.section}>
+        <h3 style={styles.sectionHeader}>Push Message</h3>
+        <textarea
+          placeholder="Enter message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          style={styles.textarea}
+        />
+        <button style={styles.button} onClick={sendMessage}>Send Message</button>
+      </div>    
+
+      {/* Consume Kafka Message */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionHeader}>Consume Messages</h3>
+        <button style={styles.button} onClick={consumeMessages}>Fetch Messages</button>
+        <pre style={styles.pre}>{consumedMessages}</pre>
+      </div>
       </div>
 
       {/* Delete Logs Section */}

@@ -224,8 +224,6 @@ const KafkaControls = () => {
         <img src="/kafka-logo.png" alt="Kafka Logo" style={styles.logo} />
       </div>
 
-      <h2 style={styles.sectionHeader}>Kafka Manager</h2>
-
       {/* Setup Kafka Section (New Feature) */}
       <div style={styles.container}>
       <h2 style={styles.sectionHeader}>Setup Kafka</h2>

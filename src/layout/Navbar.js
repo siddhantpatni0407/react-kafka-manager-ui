@@ -46,12 +46,58 @@ const Navbar = () => {
 };
 
 const styles = {
-  navbarLight: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px", background: "#f8f9fa", color: "#000" },
-  navbarDark: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px", background: "#333", color: "#fff" },
-  leftContainer: { display: "flex", gap: "15px" },
-  link: { color: "#007bff", textDecoration: "none", fontWeight: "bold" },
-  time: { marginRight: "10px", fontWeight: "bold" },
-  button: { marginLeft: "10px", padding: "5px 10px", border: "none", cursor: "pointer", background: "transparent", color: "inherit" }
-};
-
+    navbarLight: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "15px 20px",
+      background: "#f8f9fa",
+      color: "#000",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      borderBottom: "2px solid #ddd",
+    },
+    navbarDark: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "15px 20px",
+      background: "#222",
+      color: "#fff",
+      boxShadow: "0 4px 6px rgba(255, 255, 255, 0.1)",
+      borderBottom: "2px solid #444",
+    },
+    leftContainer: {
+      display: "flex",
+      gap: "20px",
+      alignItems: "center",
+    },
+    link: {
+      color: "#007bff",
+      textDecoration: "none",
+      fontWeight: "bold",
+      fontSize: "16px",
+      transition: "color 0.3s ease",
+    },
+    linkHover: {
+      color: "#0056b3",
+    },
+    time: {
+      marginRight: "10px",
+      fontWeight: "bold",
+      fontSize: "16px",
+    },
+    button: {
+      marginLeft: "10px",
+      padding: "8px 12px",
+      border: "none",
+      cursor: "pointer",
+      background: "transparent",
+      color: "inherit",
+      fontSize: "16px",
+      transition: "transform 0.2s ease",
+    },
+    buttonHover: {
+      transform: "scale(1.1)",
+    },
+  };
 export default Navbar;

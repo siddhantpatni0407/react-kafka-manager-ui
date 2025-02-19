@@ -5,11 +5,11 @@ import { faSyncAlt, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
+      setCurrentDateTime(new Date());
     }, 1000);
     document.body.classList.add("dark-mode");
     return () => clearInterval(intervalId);
@@ -33,7 +33,9 @@ const Navbar = () => {
       </div>
       <h2 style={styles.title}>Kafka Manager</h2>
       <div style={styles.rightContainer}>
-        <p style={styles.time}>{currentTime}</p>
+        <p style={styles.dateTime}>
+          {currentDateTime.toLocaleDateString()} {currentDateTime.toLocaleTimeString()} ({Intl.DateTimeFormat().resolvedOptions().timeZone})
+        </p>
         <button style={styles.iconButton} onClick={handleRefresh} title="Refresh">
           <FontAwesomeIcon icon={faSyncAlt} />
         </button>
@@ -95,9 +97,9 @@ const styles = {
     alignItems: "center",
     gap: "15px",
   },
-  time: {
+  dateTime: {
     fontWeight: "bold",
-    fontSize: "18px",
+    fontSize: "16px",
     color: "#ff5733",
   },
   iconButton: {

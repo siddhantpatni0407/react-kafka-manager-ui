@@ -13,16 +13,25 @@ function App() {
     <div className="App">
       <Router>
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route exact path="/about" element={<About />} />
-          <Route exact path="/contact" element={<Contact />} />{" "}
-          {/* Add Contact route */}
-        </Routes>
+        <main style={styles.mainContent}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </main>
+        <Footer />
       </Router>
-      <Footer />
     </div>
   );
 }
+
+const styles = {
+  mainContent: {
+    minHeight: "calc(100vh - 120px)",
+    padding: "20px",
+    backgroundColor: "#f8f9fa",
+  },
+};
 
 export default App;

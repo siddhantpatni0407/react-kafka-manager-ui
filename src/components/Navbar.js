@@ -4,13 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString());
     }, 1000);
+    document.body.classList.add("dark-mode");
     return () => clearInterval(intervalId);
   }, []);
 

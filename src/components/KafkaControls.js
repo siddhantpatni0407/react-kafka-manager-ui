@@ -21,6 +21,42 @@ const KafkaControls = () => {
   const [isLoading, setIsLoading] = useState(false); // General loading state
   const [error, setError] = useState(""); // Error message state
 
+  // New states for Kafka Setup
+  const [kafkaAutoSetupRequired, setKafkaAutoSetupRequired] = useState(false);
+  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] = useState(false);
+  const [kafkaUserDefinedPath, setKafkaUserDefinedPath] = useState("");
+  const [setupKafkaResponse, setSetupKafkaResponse] = useState("");
+  
+  const handlePathChange = (event) => {
+    setKafkaUserDefinedPath(event.target.value.trim()); // Store raw path
+  };
+  
+  const handleSetupKafka = async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append("kafkaAutoSetupRequired", kafkaAutoSetupRequired);
+      params.append("kafkaUserDefinedPathRequired", kafkaUserDefinedPathRequired);
+  
+      // ✅ Send raw path without encoding
+      if (kafkaUserDefinedPathRequired && kafkaUserDefinedPath) {
+        params.append("kafkaUserDefinedPath", kafkaUserDefinedPath);
+      }
+  
+      const apiUrl = `${API_ENDPOINTS.SETUP_KAFKA}?${params.toString()}`;
+      console.log("🔹 API Call URL:", apiUrl);
+  
+      const response = await axios.post(apiUrl, {}, {
+        headers: { "Content-Type": "application/json" }
+      });
+  
+      setSetupKafkaResponse(response.data.status);
+      alert(response.data.status);
+    } catch (error) {
+      console.error("❌ Setup Kafka Error:", error);
+      alert("Error: " + (error.response?.data?.message || error.message));
+    }
+  };
+
   // Generalized handleAction function
   const handleAction = async (url, method = "POST", params = {}, actionType = "") => {
     console.log("Calling API:", url, method, params);  // Debugging log
@@ -139,6 +175,50 @@ const KafkaControls = () => {
         {/* Kafka Logo */}
         <img src="/kafka-logo.png" alt="Kafka Logo" style={styles.logo} />
       </div>
+
+      {/* Setup Kafka Section (New Feature) */}
+      <div style={styles.container}>
+      <h2 style={styles.sectionHeader}>Setup Kafka</h2>
+
+      {/* Auto Setup Checkbox */}
+      <label>
+        <input
+          type="checkbox"
+          checked={kafkaAutoSetupRequired}
+          onChange={() => setKafkaAutoSetupRequired(!kafkaAutoSetupRequired)}
+        />
+        Kafka Auto Setup Required
+      </label>
+
+      {/* User Defined Path Checkbox */}
+      <label>
+        <input
+          type="checkbox"
+          checked={kafkaUserDefinedPathRequired}
+          onChange={() => setKafkaUserDefinedPathRequired(!kafkaUserDefinedPathRequired)}
+        />
+        Kafka User Defined Path Required
+      </label>
+
+      {/* Input Field for Folder Path */}
+      {kafkaUserDefinedPathRequired && (
+        <input
+          type="text"
+          placeholder="Enter folder path (e.g., C:\Users\YourName\Kafka)"
+          value={kafkaUserDefinedPath}
+          onChange={handlePathChange}
+          style={styles.input}
+        />
+      )}
+
+      {/* Setup Kafka Button */}
+      <button style={styles.button} onClick={handleSetupKafka}>
+        Setup Kafka
+      </button>
+
+      {/* Response Message */}
+      {setupKafkaResponse && <p style={styles.responseMessage}>{setupKafkaResponse}</p>}
+    </div>
 
       {/* Start Kafka Section */}
       <div style={styles.section}>

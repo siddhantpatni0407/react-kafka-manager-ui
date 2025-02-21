@@ -443,7 +443,7 @@ const KafkaControls = () => {
       <div style={styles.section}>
         <h2 style={styles.sectionHeader}>Delete Kafka Logs</h2>
         <button
-          style={styles.button}
+          style={{ ...styles.button, backgroundColor: "#dc3545" }} // Red color for delete
           onClick={() => {
             setIsDeleting(true);
             handleAction(API_ENDPOINTS.DELETE_LOGS_URL, "DELETE", {}, "delete");

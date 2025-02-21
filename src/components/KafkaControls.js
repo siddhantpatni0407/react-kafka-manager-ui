@@ -265,7 +265,7 @@ const KafkaControls = () => {
               style={{ transform: "scale(1.2)" }} // Slightly larger checkbox
             />
             <label className="form-check-label fw-semibold" htmlFor="autoSetup">
-              Kafka Auto Setup Required
+              Kafka Auto setup required?
             </label>
           </div>
 
@@ -281,7 +281,7 @@ const KafkaControls = () => {
               style={{ transform: "scale(1.2)" }} // Slightly larger checkbox
             />
             <label className="form-check-label fw-semibold" htmlFor="userPath">
-              Kafka User Defined Path Required
+              Kafka user defined path required?
             </label>
           </div>
         </div>

@@ -344,28 +344,49 @@ const KafkaControls = () => {
       </div>
 
       {/* Get All Topics Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Get all Kafka Topics</h2>
+      <div className="card shadow-sm p-4">
+        <h2 style={styles.sectionHeader}>Get All Kafka Topics</h2>
+
+        {/* Fetch Topics Button */}
         <button
-          style={styles.button}
-          onClick={getTopics} // Use handleAction
+          className="btn btn-primary w-100 mb-3"
+          onClick={getTopics}
           disabled={isLoading}
         >
-          {isLoading ? "Loading..." : "Get Topics"}
+          {isLoading ? (
+            <span>
+              <i className="spinner-border spinner-border-sm me-2"></i>{" "}
+              Loading...
+            </span>
+          ) : (
+            <span>
+              <i className="bi bi-search me-2"></i> Fetch Topics
+            </span>
+          )}
         </button>
 
-        {/* Display the list of topics */}
-        <div style={styles.topicsContainer}>
+        {/* Topics List */}
+        <div
+          className="border rounded p-3 bg-light overflow-auto"
+          style={{ maxHeight: "250px" }}
+        >
           {topics.length > 0 ? (
-            <ul style={styles.topicList}>
+            <ul className="list-group">
               {topics.map((topic, index) => (
-                <li key={index}>
-                  {index + 1}. {topic}
+                <li
+                  key={index}
+                  className="list-group-item d-flex align-items-center"
+                >
+                  <span className="badge bg-primary me-2">{index + 1}</span>{" "}
+                  {topic}
                 </li>
               ))}
             </ul>
           ) : (
-            <p>No topics available</p>
+            <p className="text-muted text-center">
+              <i className="bi bi-exclamation-circle-fill me-2"></i> No topics
+              available
+            </p>
           )}
         </div>
       </div>

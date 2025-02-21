@@ -346,17 +346,28 @@ const KafkaControls = () => {
       {/* Get Topic Details Section */}
       <div style={styles.section}>
         <h2 style={styles.sectionHeader}>Get Topic Details</h2>
-        <input
-          type="text"
-          placeholder="Enter topic name"
+
+        <label htmlFor="topic-dropdown" style={styles.label}>
+          Select a Topic:
+        </label>
+        <select
+          id="topic-dropdown"
           value={topicNameForDetails}
           onChange={(e) => setTopicNameForDetails(e.target.value)}
           style={styles.input}
-        />
+        >
+          <option value="">-- Select a Topic --</option>
+          {topics.map((topic) => (
+            <option key={topic} value={topic}>
+              {topic}
+            </option>
+          ))}
+        </select>
+
         <button
           style={styles.button}
           onClick={handleGetTopicDetails}
-          disabled={isLoading}
+          disabled={isLoading || !topicNameForDetails}
         >
           {isLoading ? "Loading..." : "Get Topic Details"}
         </button>
@@ -389,6 +400,7 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+
       <div>
         {/* Push Kafka Message */}
         <div className="mb-3">

@@ -247,9 +247,9 @@ const KafkaControls = () => {
 
       {/* Setup Kafka Section */}
       <div className="card shadow-lg p-4 border-0">
-        <h2 className="text-primary text-center mb-4">
-          <i className="bi bi-gear-fill"></i> Setup Kafka
-        </h2>
+        <h4 className="text-primary text-center mb-4 fw-bold">
+          <i className="bi bi-gear-fill fs-6"></i> Setup Kafka
+        </h4>
 
         {/* Checkboxes Row for Auto Setup & User Path */}
         <div className="d-flex flex-column gap-2 mb-3">
@@ -334,9 +334,10 @@ const KafkaControls = () => {
 
       {/* Start Kafka Section */}
       <div className="card shadow-sm p-4 text-center">
-        <h2 className="text-success mb-3">
-          <i className="bi bi-play-fill"></i> Start Kafka Server
-        </h2>
+        <h4 className="text-success mb-3 fw-bold">
+          <i className="bi bi-play-fill fs-6"></i> Start Kafka Server
+        </h4>
+
         <button
           className="btn btn-success w-100 fw-bold"
           onClick={() => {
@@ -362,9 +363,10 @@ const KafkaControls = () => {
       </div>
       {/* Stop Kafka Section */}
       <div className="card shadow-sm p-4 text-center mt-4">
-        <h2 className="text-danger mb-3">
-          <i className="bi bi-stop-fill"></i> Stop Kafka Server
-        </h2>
+        <h4 className="text-danger mb-3 fw-bold">
+          <i className="bi bi-stop-fill fs-6"></i> Stop Kafka Server
+        </h4>
+
         <button
           className="btn btn-danger w-100 fw-bold"
           onClick={() => {
@@ -390,9 +392,9 @@ const KafkaControls = () => {
       </div>
       {/* Create Topic Section */}
       <div className="card shadow-sm p-4 text-center">
-        <h2 className="text-primary mb-3">
-          <i className="bi bi-plus-circle"></i> Create Kafka Topic
-        </h2>
+        <h4 className="text-primary mb-3 fw-bold">
+          <i className="bi bi-plus-circle fs-6"></i> Create Kafka Topic
+        </h4>
 
         <div className="mb-3">
           <input
@@ -436,11 +438,11 @@ const KafkaControls = () => {
           <p className="mt-3 text-success">{createTopicResponse}</p>
         )}
       </div>
-      {/* Get All Topics Section */}
+      {/* View all Topics Section */}
       <div className="card shadow-lg p-4 border-0">
-        <h2 className="text-primary text-center mb-3">
-          <i className="bi bi-list-task"></i> Get All Kafka Topics
-        </h2>
+        <h4 className="text-primary text-center mb-3 fw-bold">
+          <i className="bi bi-list-task fs-6"></i> View all Kafka Topics
+        </h4>
 
         {/* Fetch Topics Button */}
         <button
@@ -487,9 +489,9 @@ const KafkaControls = () => {
       </div>
       {/* Get Topic Details Section */}
       <div className="card shadow-lg p-4 border-0">
-        <h2 className="text-primary text-center mb-3">
-          <i className="bi bi-info-circle"></i> Get Topic Details
-        </h2>
+        <h4 className="text-primary text-center mb-3 fw-bold">
+          <i className="bi bi-info-circle fs-6"></i> Get Topic Details
+        </h4>
 
         {/* Topic Selection Dropdown */}
         <div className="mb-3">
@@ -570,9 +572,9 @@ const KafkaControls = () => {
       <div>
         {/* Push Kafka Message Section */}
         <div className="card shadow-lg p-4 border-0">
-          <h2 className="text-primary text-center mb-3">
-            <i className="bi bi-envelope-paper"></i> Push Kafka Message
-          </h2>
+          <h4 className="text-primary text-center mb-3 fw-bold">
+            <i className="bi bi-envelope-paper fs-6"></i> Publish Kafka Message
+          </h4>
 
           {/* Topic Selection Dropdown */}
           <div className="mb-3">
@@ -627,9 +629,9 @@ const KafkaControls = () => {
 
         {/* Consume Kafka Message Section */}
         <div className="card shadow-lg p-4 border-0">
-          <h2 className="text-danger text-center mb-3">
-            <i className="bi bi-chat-dots-fill"></i> Consume Messages
-          </h2>
+          <h4 className="text-danger text-center mb-3 fw-bold">
+            <i className="bi bi-chat-dots-fill fs-6"></i> Consume Messages
+          </h4>
 
           {/* Fetch Messages Button */}
           <button
@@ -661,9 +663,9 @@ const KafkaControls = () => {
       </div>
       {/* Delete Logs Section */}
       <div className="card shadow-lg p-4 border-0">
-        <h2 className="text-danger text-center mb-3">
-          <i className="bi bi-trash-fill"></i> Delete Kafka Logs
-        </h2>
+        <h4 className="text-danger text-center mb-3 fw-bold">
+          <i className="bi bi-trash-fill fs-6"></i> Delete Kafka Logs
+        </h4>
 
         {/* Delete Button */}
         <button

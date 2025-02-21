@@ -343,6 +343,33 @@ const KafkaControls = () => {
         )}
       </div>
 
+      {/* Get All Topics Section */}
+      <div style={styles.section}>
+        <h2 style={styles.sectionHeader}>Get all Kafka Topics</h2>
+        <button
+          style={styles.button}
+          onClick={getTopics} // Use handleAction
+          disabled={isLoading}
+        >
+          {isLoading ? "Loading..." : "Get Topics"}
+        </button>
+
+        {/* Display the list of topics */}
+        <div style={styles.topicsContainer}>
+          {topics.length > 0 ? (
+            <ul style={styles.topicList}>
+              {topics.map((topic, index) => (
+                <li key={index}>
+                  {index + 1}. {topic}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No topics available</p>
+          )}
+        </div>
+      </div>
+
       {/* Get Topic Details Section */}
       <div style={styles.section}>
         <h2 style={styles.sectionHeader}>Get Topic Details</h2>
@@ -472,33 +499,6 @@ const KafkaControls = () => {
         {deleteLogsResponse && (
           <p style={styles.responseMessage}>{deleteLogsResponse}</p>
         )}
-      </div>
-
-      {/* Get Topics Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Get Kafka Topics</h2>
-        <button
-          style={styles.button}
-          onClick={getTopics} // Use handleAction
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Get Topics"}
-        </button>
-
-        {/* Display the list of topics */}
-        <div style={styles.topicsContainer}>
-          {topics.length > 0 ? (
-            <ul style={styles.topicList}>
-              {topics.map((topic, index) => (
-                <li key={index}>
-                  {index + 1}. {topic}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No topics available</p>
-          )}
-        </div>
       </div>
     </div>
   );

@@ -31,12 +31,14 @@ const KafkaControls = () => {
   const [selectedTopic, setSelectedTopic] = useState("");
   const [message, setMessage] = useState("");
   const [consumedMessages, setConsumedMessages] = useState("");
+  const [sendMessageResponse, setSendMessageResponse] = useState("");
 
   const sendMessage = async () => {
     if (!selectedTopic || !message) {
-      alert("Please select a topic and enter a message.");
+      setSendMessageResponse("⚠️ Please select a topic and enter a message.");
       return;
     }
+
     try {
       const response = await axios.get(
         API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL,
@@ -44,9 +46,12 @@ const KafkaControls = () => {
           params: { topicName: selectedTopic, message },
         }
       );
-      alert(response.data.status);
+
+      // Update state instead of using alert
+      setSendMessageResponse(`✅ ${response.data.status}`);
+      setMessage(""); // Clear input field after sending
     } catch (error) {
-      alert("Failed to send message.");
+      setSendMessageResponse("❌ Failed to send message. Please try again.");
     }
   };
 
@@ -240,8 +245,8 @@ const KafkaControls = () => {
         <img
           src="/kafka-logo.png"
           alt="Kafka Logo"
-          className="img-fluid"
-          style={{ maxWidth: "150px" }}
+          className="img-fluid rounded shadow"
+          style={{ maxWidth: "auto", height: "auto" }}
         />
       </div>
 
@@ -315,7 +320,7 @@ const KafkaControls = () => {
 
         {/* Setup Kafka Button (Disabled when User Path is required but invalid) */}
         <button
-          className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
           onClick={handleSetupKafka}
           disabled={
             kafkaUserDefinedPathRequired && !isValidPath(kafkaUserDefinedPath)
@@ -570,7 +575,7 @@ const KafkaControls = () => {
         )}
       </div>
       <div>
-        {/* Push Kafka Message Section */}
+        {/* Publish Kafka Message Section */}
         <div className="card shadow-lg p-4 border-0">
           <h4 className="text-primary text-center mb-3 fw-bold">
             <i className="bi bi-envelope-paper fs-6"></i> Publish Kafka Message
@@ -607,7 +612,7 @@ const KafkaControls = () => {
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              rows={5} // Proper height
+              rows={5}
               style={{
                 fontSize: "16px",
                 padding: "12px",
@@ -625,6 +630,13 @@ const KafkaControls = () => {
           >
             <i className="bi bi-send-fill me-2"></i> Send Message
           </button>
+
+          {/* Display Response Message Below Button */}
+          {sendMessageResponse && (
+            <div className="alert mt-3 text-center fw-bold alert-info">
+              {sendMessageResponse}
+            </div>
+          )}
         </div>
 
         {/* Consume Kafka Message Section */}

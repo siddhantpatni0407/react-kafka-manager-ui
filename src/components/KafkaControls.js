@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { API_ENDPOINTS } from "./constants"; // Importing the updated constants file
 
@@ -12,7 +12,7 @@ const KafkaControls = () => {
   const [startKafkaResponse, setStartKafkaResponse] = useState(""); // State to store the start Kafka response
   const [deleteLogsResponse, setDeleteLogsResponse] = useState(""); // State to store the delete logs response
   const [topicDetails, setTopicDetails] = useState(null); // State to store the topic details response
-  
+
   // Separate loading states for each button
   const [isStarting, setIsStarting] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
@@ -23,7 +23,8 @@ const KafkaControls = () => {
 
   // New states for Kafka Setup
   const [kafkaAutoSetupRequired, setKafkaAutoSetupRequired] = useState(false);
-  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] = useState(false);
+  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] =
+    useState(false);
   const [kafkaUserDefinedPath, setKafkaUserDefinedPath] = useState("");
   const [setupKafkaResponse, setSetupKafkaResponse] = useState("");
 
@@ -31,28 +32,18 @@ const KafkaControls = () => {
   const [message, setMessage] = useState("");
   const [consumedMessages, setConsumedMessages] = useState("");
 
-  useEffect(() => {
-    fetchTopics();
-  }, []);
-
-  const fetchTopics = async () => {
-    try {
-      const response = await axios.get(API_ENDPOINTS.GET_TOPICS_URL);
-      setTopics(response.data);
-    } catch (error) {
-      setError("Failed to fetch topics");
-    }
-  };
-
   const sendMessage = async () => {
     if (!selectedTopic || !message) {
       alert("Please select a topic and enter a message.");
       return;
     }
     try {
-      const response = await axios.get(API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL, {
-        params: { topicName: selectedTopic, message },
-      });
+      const response = await axios.get(
+        API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL,
+        {
+          params: { topicName: selectedTopic, message },
+        }
+      );
       alert(response.data.status);
     } catch (error) {
       alert("Failed to send message.");
@@ -65,38 +56,48 @@ const KafkaControls = () => {
       return;
     }
     try {
-      const response = await axios.get(API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL, {
-        params: { topicName: selectedTopic },
-      });
+      const response = await axios.get(
+        API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL,
+        {
+          params: { topicName: selectedTopic },
+        }
+      );
       setConsumedMessages(response.data.status);
     } catch (error) {
       console.error("Error consuming messages:", error);
       alert("Failed to fetch messages.");
     }
-};
-  
+  };
+
   const handlePathChange = (event) => {
     setKafkaUserDefinedPath(event.target.value.trim()); // Store raw path
   };
-  
+
   const handleSetupKafka = async () => {
     try {
       const params = new URLSearchParams();
       params.append("kafkaAutoSetupRequired", kafkaAutoSetupRequired);
-      params.append("kafkaUserDefinedPathRequired", kafkaUserDefinedPathRequired);
-  
+      params.append(
+        "kafkaUserDefinedPathRequired",
+        kafkaUserDefinedPathRequired
+      );
+
       // ✅ Send raw path without encoding
       if (kafkaUserDefinedPathRequired && kafkaUserDefinedPath) {
         params.append("kafkaUserDefinedPath", kafkaUserDefinedPath);
       }
-  
+
       const apiUrl = `${API_ENDPOINTS.SETUP_KAFKA}?${params.toString()}`;
       console.log("🔹 API Call URL:", apiUrl);
-  
-      const response = await axios.post(apiUrl, {}, {
-        headers: { "Content-Type": "application/json" }
-      });
-  
+
+      const response = await axios.post(
+        apiUrl,
+        {},
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
       setSetupKafkaResponse(response.data.status);
       alert(response.data.status);
     } catch (error) {
@@ -106,8 +107,13 @@ const KafkaControls = () => {
   };
 
   // Generalized handleAction function
-  const handleAction = async (url, method = "POST", params = {}, actionType = "") => {
-    console.log("Calling API:", url, method, params);  // Debugging log
+  const handleAction = async (
+    url,
+    method = "POST",
+    params = {},
+    actionType = ""
+  ) => {
+    console.log("Calling API:", url, method, params); // Debugging log
     try {
       setIsLoading(true);
       setError(""); // Reset any previous error messages
@@ -186,9 +192,9 @@ const KafkaControls = () => {
       alert("Please enter both topic name.");
       return;
     }
-    
+
     setIsCreating(true);
-    
+
     // Construct the URL with optional partition query parameter
     let url = `${API_ENDPOINTS.CREATE_TOPIC_URL}?topicName=${createTopicName}`;
     if (partition) {
@@ -218,7 +224,7 @@ const KafkaControls = () => {
           <p style={styles.errorMessage}>{error}</p>
         </div>
       )}
-    
+
       <div style={styles.header}>
         {/* Kafka Logo */}
         <img src="/kafka-logo.png" alt="Kafka Logo" style={styles.logo} />
@@ -226,49 +232,53 @@ const KafkaControls = () => {
 
       {/* Setup Kafka Section (New Feature) */}
       <div style={styles.container}>
-      <h2 style={styles.sectionHeader}>Setup Kafka</h2>
+        <h2 style={styles.sectionHeader}>Setup Kafka</h2>
 
-      {/* Auto Setup Checkbox */}
-      <label>
-        <input
-          type="checkbox"
-          checked={kafkaAutoSetupRequired}
-          onChange={() => setKafkaAutoSetupRequired(!kafkaAutoSetupRequired)}
-        />
-        Kafka Auto Setup Required
-      </label>
+        {/* Auto Setup Checkbox */}
+        <label>
+          <input
+            type="checkbox"
+            checked={kafkaAutoSetupRequired}
+            onChange={() => setKafkaAutoSetupRequired(!kafkaAutoSetupRequired)}
+          />
+          Kafka Auto Setup Required
+        </label>
 
-      {/* User Defined Path Checkbox */}
-      <label>
-        <input
-          type="checkbox"
-          checked={kafkaUserDefinedPathRequired}
-          onChange={() => setKafkaUserDefinedPathRequired(!kafkaUserDefinedPathRequired)}
-        />
-        Kafka User Defined Path Required
-      </label>
+        {/* User Defined Path Checkbox */}
+        <label>
+          <input
+            type="checkbox"
+            checked={kafkaUserDefinedPathRequired}
+            onChange={() =>
+              setKafkaUserDefinedPathRequired(!kafkaUserDefinedPathRequired)
+            }
+          />
+          Kafka User Defined Path Required
+        </label>
 
-      {/* Input Field for Folder Path */}
-      {kafkaUserDefinedPathRequired && (
-        <input
-          type="text"
-          placeholder="Enter folder path (e.g., C:\Users\YourName\Kafka)"
-          value={kafkaUserDefinedPath}
-          onChange={handlePathChange}
-          style={styles.input}
-        />
-      )}
+        {/* Input Field for Folder Path */}
+        {kafkaUserDefinedPathRequired && (
+          <input
+            type="text"
+            placeholder="Enter folder path (e.g., C:\Users\YourName\Kafka)"
+            value={kafkaUserDefinedPath}
+            onChange={handlePathChange}
+            style={styles.input}
+          />
+        )}
 
-      {/* Setup Kafka Button */}
-      <button style={styles.button} onClick={handleSetupKafka}>
-        Setup Kafka
-      </button>
+        {/* Setup Kafka Button */}
+        <button style={styles.button} onClick={handleSetupKafka}>
+          Setup Kafka
+        </button>
 
-      {/* Response Message */}
-      {setupKafkaResponse && <p style={styles.responseMessage}>{setupKafkaResponse}</p>}
-    </div>
+        {/* Response Message */}
+        {setupKafkaResponse && (
+          <p style={styles.responseMessage}>{setupKafkaResponse}</p>
+        )}
+      </div>
 
-    {/* Start Kafka Section */}
+      {/* Start Kafka Section */}
       <div style={styles.section}>
         <h2 style={styles.sectionHeader}>Start Kafka Server</h2>
         <button
@@ -380,33 +390,53 @@ const KafkaControls = () => {
         )}
       </div>
       <div>
-      
-      {/* Push Kafka Message */}
-      <label>Select Topic:</label>
-      <select onChange={(e) => setSelectedTopic(e.target.value)} value={selectedTopic} style={styles.input}>
-        <option value="">-- Select a Topic --</option>
-        {topics.map((topic) => (
-          <option key={topic} value={topic}>{topic}</option>
-        ))}
-      </select>
+        {/* Push Kafka Message */}
+        <label>Select Topic:</label>
+        <select
+          onChange={(e) => setSelectedTopic(e.target.value)}
+          value={selectedTopic}
+          style={styles.input}
+        >
+          <option value="">-- Select a Topic --</option>
+          {topics.map((topic) => (
+            <option key={topic} value={topic}>
+              {topic}
+            </option>
+          ))}
+        </select>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionHeader}>Push Message</h3>
-        <textarea
-          placeholder="Enter message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          style={styles.textarea}
-        />
-        <button style={styles.button} onClick={sendMessage}>Send Message</button>
-      </div>    
+        <div style={styles.section}>
+          <h3 style={styles.sectionHeader}>Push Message</h3>
+          <textarea
+            placeholder="Enter message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={6} // Increased height
+            cols={50} // Increased width
+            style={{
+              ...styles.textarea,
+              minHeight: "120px", // More vertical space
+              width: "100%", // Takes full width
+              fontSize: "16px", // Better readability
+              padding: "10px", // More spacing
+              borderRadius: "8px", // Smoother corners
+              border: "1px solid #ccc", // Subtle border
+              resize: "vertical", // Allows vertical resizing only
+            }}
+          />
+          <button style={styles.button} onClick={sendMessage}>
+            Send Message
+          </button>
+        </div>
 
-      {/* Consume Kafka Message */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionHeader}>Consume Messages</h3>
-        <button style={styles.button} onClick={consumeMessages}>Fetch Messages</button>
-        <pre style={styles.pre}>{consumedMessages}</pre>
-      </div>
+        {/* Consume Kafka Message */}
+        <div style={styles.section}>
+          <h3 style={styles.sectionHeader}>Consume Messages</h3>
+          <button style={styles.button} onClick={consumeMessages}>
+            Fetch Messages
+          </button>
+          <pre style={styles.pre}>{consumedMessages}</pre>
+        </div>
       </div>
 
       {/* Delete Logs Section */}
@@ -462,75 +492,90 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     display: "flex",
     flexDirection: "column",
-    gap: "25px",
-    padding: "20px",
-    maxWidth: "800px",
+    gap: "20px",
+    padding: "25px",
+    maxWidth: "750px",
     margin: "auto",
-    backgroundColor: "#f9f9f9",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#fefefe",
+    borderRadius: "10px",
+    boxShadow: "0 5px 10px rgba(0, 0, 0, 0.1)",
   },
   errorContainer: {
-    padding: "10px",
-    backgroundColor: "#ffcccc",
-    border: "1px solid #ff0000",
-    borderRadius: "5px",
-    marginBottom: "20px",
+    padding: "12px",
+    backgroundColor: "#ffe6e6",
+    border: "1px solid #ff4d4d",
+    borderRadius: "6px",
+    marginBottom: "15px",
   },
   errorMessage: {
     color: "#ff0000",
     fontWeight: "bold",
     textAlign: "center",
+    fontSize: "14px",
   },
   header: {
     textAlign: "center",
-    marginBottom: "30px",
+    marginBottom: "25px",
+    fontSize: "22px",
+    fontWeight: "bold",
   },
   logo: {
-    width: "150px",  // Adjust the size of the logo
-    marginBottom: "20px", // Space between logo and text
+    width: "140px", // Responsive logo size
+    marginBottom: "15px",
   },
   section: {
     backgroundColor: "#fff",
-    padding: "10px 15px", // Reduced padding to decrease box size
+    padding: "15px",
     borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 3px 6px rgba(0, 0, 0, 0.08)",
+    transition: "transform 0.2s",
   },
   sectionHeader: {
-    fontSize: "18px", // Slightly reduced font size for section header
+    fontSize: "17px",
     fontWeight: "bold",
     color: "#333",
     marginBottom: "10px",
   },
   button: {
-    padding: "10px 18px", // Reduced padding to decrease button size
-    fontSize: "14px", // Slightly reduced font size for button
+    padding: "12px 20px",
+    fontSize: "15px",
     backgroundColor: "#007BFF",
     color: "#fff",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "6px",
     cursor: "pointer",
-    transition: "background-color 0.3s",
+    transition: "background-color 0.3s, transform 0.2s",
     width: "100%",
   },
+  buttonHover: {
+    backgroundColor: "#0056b3",
+    transform: "scale(1.02)",
+  },
   input: {
-    padding: "8px",
-    fontSize: "14px", // Reduced font size for input
-    marginBottom: "10px",
-    borderRadius: "5px",
+    padding: "10px",
+    fontSize: "15px",
+    marginBottom: "12px",
+    borderRadius: "6px",
     border: "1px solid #ccc",
     width: "100%",
+    outline: "none",
+    transition: "border-color 0.2s ease-in-out",
+  },
+  inputFocus: {
+    borderColor: "#007BFF",
   },
   responseMessage: {
     color: "green",
-    marginTop: "10px",
+    marginTop: "12px",
+    fontSize: "14px",
+    fontWeight: "bold",
   },
   topicsContainer: {
     marginTop: "20px",
     backgroundColor: "#fff",
-    padding: "10px",
-    borderRadius: "5px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    padding: "12px",
+    borderRadius: "6px",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
   },
   topicList: {
     listStyleType: "none",
@@ -538,24 +583,26 @@ const styles = {
   },
   detailsContainer: {
     backgroundColor: "#f9f9f9",
-    padding: "10px",
-    borderRadius: "5px",
+    padding: "12px",
+    borderRadius: "6px",
     marginTop: "20px",
   },
   table: {
     width: "100%",
     borderCollapse: "collapse",
-    marginTop: "20px",
+    marginTop: "15px",
   },
   th: {
     textAlign: "left",
-    padding: "8px",
+    padding: "10px",
     backgroundColor: "#f2f2f2",
     border: "1px solid #ddd",
+    fontSize: "14px",
   },
   td: {
-    padding: "8px",
+    padding: "10px",
     border: "1px solid #ddd",
+    fontSize: "14px",
   },
 };
 

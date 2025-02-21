@@ -391,19 +391,24 @@ const KafkaControls = () => {
       </div>
       <div>
         {/* Push Kafka Message */}
-        <label>Select Topic:</label>
-        <select
-          onChange={(e) => setSelectedTopic(e.target.value)}
-          value={selectedTopic}
-          style={styles.input}
-        >
-          <option value="">-- Select a Topic --</option>
-          {topics.map((topic) => (
-            <option key={topic} value={topic}>
-              {topic}
-            </option>
-          ))}
-        </select>
+        <div className="mb-3">
+          <label htmlFor="topic-select" className="form-label fw-bold">
+            Select Topic:
+          </label>
+          <select
+            id="topic-select"
+            className="form-select"
+            onChange={(e) => setSelectedTopic(e.target.value)}
+            value={selectedTopic}
+          >
+            <option value="">-- Select a Topic --</option>
+            {topics.map((topic) => (
+              <option key={topic} value={topic}>
+                {topic}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div style={styles.section}>
           <h3 style={styles.sectionHeader}>Push Message</h3>

@@ -35,6 +35,30 @@ const KafkaControls = () => {
   const [consumeMessageResponse, setConsumeMessageResponse] = useState("");
   const [selectedConsumeTopic, setSelectedConsumeTopic] = useState("");
 
+  const [isCheckingHealth, setIsCheckingHealth] = useState(false);
+  const [kafkaHealthStatus, setKafkaHealthStatus] = useState("");
+
+  const checkKafkaHealth = async () => {
+    try {
+      setIsCheckingHealth(true);
+      const response = await fetch(
+        API_ENDPOINTS.KAFKA_CONSUME_HEALTH_CHECK_URL
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setKafkaHealthStatus(data?.status || "Kafka is running fine.");
+    } catch (error) {
+      console.error("Kafka health check failed:", error);
+      setKafkaHealthStatus("Kafka health check failed. Please try again.");
+    } finally {
+      setIsCheckingHealth(false);
+    }
+  };
+
   const sendMessage = async () => {
     if (!selectedTopic || !message) {
       setSendMessageResponse("⚠️ Please select a topic and enter a message.");
@@ -338,6 +362,43 @@ const KafkaControls = () => {
         {setupKafkaResponse && (
           <div className="alert alert-info mt-3 text-center fw-bold shadow-sm">
             {setupKafkaResponse}
+          </div>
+        )}
+      </div>
+
+      {/* Check Kafka Health Section */}
+      <div className="card shadow-lg p-4 border-0 mb-4">
+        <h4 className="text-info text-center mb-3 fw-bold">
+          <i className="bi bi-heart-pulse fs-6"></i> Check Kafka Health
+        </h4>
+
+        <button
+          className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          onClick={checkKafkaHealth}
+          disabled={isCheckingHealth}
+        >
+          {isCheckingHealth ? (
+            <>
+              <i className="spinner-border spinner-border-sm"></i> Checking...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-heart-pulse-fill"></i> Check Kafka Health
+            </>
+          )}
+        </button>
+
+        {/* Display Health Check Response */}
+        {kafkaHealthStatus && (
+          <div
+            className={`alert mt-3 text-center fw-bold shadow-sm ${
+              kafkaHealthStatus.includes("failed")
+                ? "alert-danger"
+                : "alert-success"
+            }`}
+            role="alert"
+          >
+            {kafkaHealthStatus}
           </div>
         )}
       </div>

@@ -32,6 +32,8 @@ const KafkaControls = () => {
   const [message, setMessage] = useState("");
   const [consumedMessages, setConsumedMessages] = useState("");
   const [sendMessageResponse, setSendMessageResponse] = useState("");
+  const [consumeMessageResponse, setConsumeMessageResponse] = useState("");
+  const [selectedConsumeTopic, setSelectedConsumeTopic] = useState("");
 
   const sendMessage = async () => {
     if (!selectedTopic || !message) {
@@ -57,9 +59,10 @@ const KafkaControls = () => {
 
   const consumeMessages = async () => {
     if (!selectedTopic) {
-      alert("Please select a topic.");
+      setConsumeMessageResponse("⚠️ Please select a topic.");
       return;
     }
+
     try {
       const response = await axios.get(
         API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL,
@@ -67,10 +70,17 @@ const KafkaControls = () => {
           params: { topicName: selectedTopic },
         }
       );
-      setConsumedMessages(response.data.status);
+
+      // Set consumed messages and response message
+      setConsumedMessages(response.data.status || "No messages found.");
+      setConsumeMessageResponse(
+        `✅ Messages fetched successfully from topic: ${selectedTopic}`
+      );
     } catch (error) {
       console.error("Error consuming messages:", error);
-      alert("Failed to fetch messages.");
+      setConsumeMessageResponse(
+        "❌ Failed to fetch messages. Please try again."
+      );
     }
   };
 
@@ -645,34 +655,68 @@ const KafkaControls = () => {
             <i className="bi bi-chat-dots-fill fs-6"></i> Consume Messages
           </h4>
 
+          {/* Topic Selection Dropdown */}
+          <div className="mb-3">
+            <label
+              htmlFor="consume-topic-select"
+              className="form-label fw-bold"
+            >
+              Select Topic:
+            </label>
+            <select
+              id="consume-topic-select"
+              className="form-select"
+              onChange={(e) => setSelectedConsumeTopic(e.target.value)}
+              value={selectedConsumeTopic}
+            >
+              <option value="">-- Select a Topic --</option>
+              {topics.map((topic) => (
+                <option key={topic} value={topic}>
+                  {topic}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Fetch Messages Button */}
           <button
-            className="btn btn-warning w-100 fw-bold"
+            className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
             onClick={consumeMessages}
+            disabled={!selectedConsumeTopic}
           >
-            <i className="bi bi-arrow-repeat me-2"></i> Fetch Messages
+            <i className="bi bi-arrow-repeat"></i> Fetch Messages
           </button>
 
+          {/* Display Response Message Below Button */}
+          {consumeMessageResponse && (
+            <div className="alert mt-3 text-center fw-bold alert-info">
+              {consumeMessageResponse}
+            </div>
+          )}
+
           {/* Display Consumed Messages */}
-          <div
-            className="border rounded mt-3 p-3 bg-light overflow-auto"
-            style={{
-              maxHeight: "250px",
-              whiteSpace: "pre-wrap",
-              fontSize: "14px",
-            }}
-          >
-            {consumedMessages ? (
-              <pre className="m-0">{consumedMessages}</pre>
-            ) : (
-              <p className="text-muted text-center">
-                <i className="bi bi-exclamation-circle-fill me-2"></i> No
-                messages available
-              </p>
-            )}
-          </div>
+          {consumedMessages && (
+            <div
+              className="border rounded mt-3 p-3 bg-light overflow-auto"
+              style={{
+                maxHeight: "250px",
+                whiteSpace: "pre-wrap",
+                fontSize: "14px",
+              }}
+            >
+              <pre className="m-0 text-success fw-bold">{consumedMessages}</pre>
+            </div>
+          )}
+
+          {!consumedMessages && !consumeMessageResponse && (
+            <p className="text-muted text-center mt-3">
+              <i className="bi bi-exclamation-circle-fill me-2"></i> No messages
+              available
+            </p>
+          )}
         </div>
       </div>
+
       {/* Delete Logs Section */}
       <div className="card shadow-lg p-4 border-0">
         <h4 className="text-danger text-center mb-3 fw-bold">

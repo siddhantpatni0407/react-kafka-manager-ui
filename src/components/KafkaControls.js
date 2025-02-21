@@ -246,7 +246,7 @@ const KafkaControls = () => {
           src="/kafka-logo.png"
           alt="Kafka Logo"
           className="img-fluid rounded shadow"
-          style={{ maxWidth: "auto", height: "auto" }}
+          style={{ maxWidth: "200px", height: "auto" }}
         />
       </div>
 

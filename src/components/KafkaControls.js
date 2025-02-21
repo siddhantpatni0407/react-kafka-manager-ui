@@ -73,6 +73,16 @@ const KafkaControls = () => {
     setKafkaUserDefinedPath(event.target.value.trim()); // Store raw path
   };
 
+  const isValidPath = (path) => {
+    // Ensure path is not empty
+    if (!path.trim()) return false;
+
+    // Allow Windows (C:\Users\Kafka) and Unix-like (/home/user/kafka) paths
+    const pathRegex = /^(?:[A-Za-z]:\\|\/)[\w\s\-.\\/]+$/;
+
+    return pathRegex.test(path);
+  };
+
   const handleSetupKafka = async () => {
     try {
       const params = new URLSearchParams();
@@ -218,138 +228,223 @@ const KafkaControls = () => {
 
   return (
     <div style={styles.container}>
-      {/* Error Message at the top */}
+      {/* Error Message at the Top */}
       {error && (
-        <div style={styles.errorContainer}>
-          <p style={styles.errorMessage}>{error}</p>
+        <div className="alert alert-danger text-center fw-bold" role="alert">
+          <i className="bi bi-exclamation-triangle-fill me-2"></i> {error}
         </div>
       )}
 
-      <div style={styles.header}>
-        {/* Kafka Logo */}
-        <img src="/kafka-logo.png" alt="Kafka Logo" style={styles.logo} />
+      {/* Kafka Logo & Header */}
+      <div className="text-center my-4">
+        <img
+          src="/kafka-logo.png"
+          alt="Kafka Logo"
+          className="img-fluid"
+          style={{ maxWidth: "150px" }}
+        />
       </div>
 
-      {/* Setup Kafka Section (New Feature) */}
-      <div style={styles.container}>
-        <h2 style={styles.sectionHeader}>Setup Kafka</h2>
+      {/* Setup Kafka Section */}
+      <div className="card shadow-lg p-4 border-0">
+        <h2 className="text-primary text-center mb-4">
+          <i className="bi bi-gear-fill"></i> Setup Kafka
+        </h2>
 
-        {/* Auto Setup Checkbox */}
-        <label>
-          <input
-            type="checkbox"
-            checked={kafkaAutoSetupRequired}
-            onChange={() => setKafkaAutoSetupRequired(!kafkaAutoSetupRequired)}
-          />
-          Kafka Auto Setup Required
-        </label>
+        {/* Checkboxes Row for Auto Setup & User Path */}
+        <div className="d-flex flex-column gap-2 mb-3">
+          <div className="form-check d-flex align-items-center gap-2">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="autoSetup"
+              checked={kafkaAutoSetupRequired}
+              onChange={() =>
+                setKafkaAutoSetupRequired(!kafkaAutoSetupRequired)
+              }
+              style={{ transform: "scale(1.2)" }} // Slightly larger checkbox
+            />
+            <label className="form-check-label fw-semibold" htmlFor="autoSetup">
+              Kafka Auto Setup Required
+            </label>
+          </div>
 
-        {/* User Defined Path Checkbox */}
-        <label>
-          <input
-            type="checkbox"
-            checked={kafkaUserDefinedPathRequired}
-            onChange={() =>
-              setKafkaUserDefinedPathRequired(!kafkaUserDefinedPathRequired)
-            }
-          />
-          Kafka User Defined Path Required
-        </label>
+          <div className="form-check d-flex align-items-center gap-2">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="userPath"
+              checked={kafkaUserDefinedPathRequired}
+              onChange={() =>
+                setKafkaUserDefinedPathRequired(!kafkaUserDefinedPathRequired)
+              }
+              style={{ transform: "scale(1.2)" }} // Slightly larger checkbox
+            />
+            <label className="form-check-label fw-semibold" htmlFor="userPath">
+              Kafka User Defined Path Required
+            </label>
+          </div>
+        </div>
 
-        {/* Input Field for Folder Path */}
+        {/* Folder Path Input */}
         {kafkaUserDefinedPathRequired && (
-          <input
-            type="text"
-            placeholder="Enter folder path (e.g., C:\Users\YourName\Kafka)"
-            value={kafkaUserDefinedPath}
-            onChange={handlePathChange}
-            style={styles.input}
-          />
+          <div className="mb-3">
+            <label htmlFor="folderPath" className="form-label fw-semibold">
+              Enter Folder Path:
+            </label>
+            <input
+              type="text"
+              id="folderPath"
+              className={`form-control shadow-sm ${
+                isValidPath(kafkaUserDefinedPath)
+                  ? "border-primary"
+                  : "border-danger"
+              }`}
+              placeholder="E.g., C:\Users\YourName\Kafka"
+              value={kafkaUserDefinedPath}
+              onChange={handlePathChange}
+            />
+            {!isValidPath(kafkaUserDefinedPath) && (
+              <small className="text-danger">
+                <i className="bi bi-exclamation-circle me-1"></i> Please enter a
+                valid folder path.
+              </small>
+            )}
+          </div>
         )}
 
-        {/* Setup Kafka Button */}
-        <button style={styles.button} onClick={handleSetupKafka}>
-          Setup Kafka
+        {/* Setup Kafka Button (Disabled when User Path is required but invalid) */}
+        <button
+          className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          onClick={handleSetupKafka}
+          disabled={
+            kafkaUserDefinedPathRequired && !isValidPath(kafkaUserDefinedPath)
+          }
+        >
+          <i className="bi bi-play-fill"></i> Setup Kafka
         </button>
 
         {/* Response Message */}
         {setupKafkaResponse && (
-          <p style={styles.responseMessage}>{setupKafkaResponse}</p>
+          <div className="alert alert-info mt-3 text-center">
+            {setupKafkaResponse}
+          </div>
         )}
       </div>
 
       {/* Start Kafka Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Start Kafka Server</h2>
+      <div className="card shadow-sm p-4 text-center">
+        <h2 className="text-success mb-3">
+          <i className="bi bi-play-fill"></i> Start Kafka Server
+        </h2>
         <button
-          style={styles.button}
+          className="btn btn-success w-100 fw-bold"
           onClick={() => {
             setIsStarting(true);
             handleAction(API_ENDPOINTS.START_KAFKA_URL, "POST", {}, "start");
           }}
-          disabled={isStarting || isLoading} // Disable if already loading
+          disabled={isStarting || isLoading}
         >
-          {isStarting ? "Starting..." : "Start Kafka"}
+          {isStarting ? (
+            <span>
+              <i className="spinner-border spinner-border-sm me-2"></i>{" "}
+              Starting...
+            </span>
+          ) : (
+            <span>
+              <i className="bi bi-power me-2"></i> Start Kafka
+            </span>
+          )}
         </button>
         {startKafkaResponse && (
-          <p style={styles.responseMessage}>{startKafkaResponse}</p>
+          <p className="mt-3 text-success">{startKafkaResponse}</p>
         )}
       </div>
-
       {/* Stop Kafka Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Stop Kafka Server</h2>
+      <div className="card shadow-sm p-4 text-center mt-4">
+        <h2 className="text-danger mb-3">
+          <i className="bi bi-stop-fill"></i> Stop Kafka Server
+        </h2>
         <button
-          style={styles.button}
+          className="btn btn-danger w-100 fw-bold"
           onClick={() => {
             setIsStopping(true);
             handleAction(API_ENDPOINTS.STOP_KAFKA_URL, "POST", {}, "stop");
           }}
           disabled={isStopping || isLoading}
         >
-          {isStopping ? "Stopping..." : "Stop Kafka"}
+          {isStopping ? (
+            <span>
+              <i className="spinner-border spinner-border-sm me-2"></i>{" "}
+              Stopping...
+            </span>
+          ) : (
+            <span>
+              <i className="bi bi-x-circle me-2"></i> Stop Kafka
+            </span>
+          )}
         </button>
         {stopKafkaResponse && (
-          <p style={styles.responseMessage}>{stopKafkaResponse}</p>
+          <p className="mt-3 text-danger">{stopKafkaResponse}</p>
         )}
       </div>
-
       {/* Create Topic Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Create Kafka Topic</h2>
-        <input
-          type="text"
-          placeholder="Enter topic name"
-          value={createTopicName}
-          onChange={(e) => setCreateTopicName(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="number"
-          placeholder="Enter number of partitions (optional)"
-          value={partition}
-          onChange={(e) => setPartition(e.target.value)}
-          style={styles.input}
-        />
+      <div className="card shadow-sm p-4 text-center">
+        <h2 className="text-primary mb-3">
+          <i className="bi bi-plus-circle"></i> Create Kafka Topic
+        </h2>
+
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter topic name"
+            value={createTopicName}
+            onChange={(e) => setCreateTopicName(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Enter number of partitions (optional)"
+            value={partition}
+            onChange={(e) => setPartition(e.target.value)}
+            min="1"
+          />
+        </div>
+
         <button
-          style={styles.button}
+          className="btn btn-primary w-100 fw-bold"
           onClick={handleCreateTopic}
           disabled={isCreating || isLoading}
         >
-          {isCreating ? "Creating..." : "Create Topic"}
+          {isCreating ? (
+            <span>
+              <i className="spinner-border spinner-border-sm me-2"></i>{" "}
+              Creating...
+            </span>
+          ) : (
+            <span>
+              <i className="bi bi-file-earmark-plus me-2"></i> Create Topic
+            </span>
+          )}
         </button>
+
         {createTopicResponse && (
-          <p style={styles.responseMessage}>{createTopicResponse}</p>
+          <p className="mt-3 text-success">{createTopicResponse}</p>
         )}
       </div>
-
       {/* Get All Topics Section */}
-      <div className="card shadow-sm p-4">
-        <h2 style={styles.sectionHeader}>Get All Kafka Topics</h2>
+      <div className="card shadow-lg p-4 border-0">
+        <h2 className="text-primary text-center mb-3">
+          <i className="bi bi-list-task"></i> Get All Kafka Topics
+        </h2>
 
         {/* Fetch Topics Button */}
         <button
-          className="btn btn-primary w-100 mb-3"
+          className="btn btn-success fw-bold w-100 mb-3 d-flex align-items-center justify-content-center"
           onClick={getTopics}
           disabled={isLoading}
         >
@@ -360,25 +455,25 @@ const KafkaControls = () => {
             </span>
           ) : (
             <span>
-              <i className="bi bi-search me-2"></i> Fetch Topics
+              <i className="bi bi-arrow-repeat me-2"></i> Fetch Topics
             </span>
           )}
         </button>
 
-        {/* Topics List */}
+        {/* Topics List Container */}
         <div
-          className="border rounded p-3 bg-light overflow-auto"
+          className="border rounded p-3 bg-light overflow-auto shadow-sm"
           style={{ maxHeight: "250px" }}
         >
           {topics.length > 0 ? (
-            <ul className="list-group">
+            <ul className="list-group list-group-flush">
               {topics.map((topic, index) => (
                 <li
                   key={index}
                   className="list-group-item d-flex align-items-center"
                 >
-                  <span className="badge bg-primary me-2">{index + 1}</span>{" "}
-                  {topic}
+                  <span className="badge bg-success me-2">{index + 1}</span>
+                  <strong className="text-dark">{topic}</strong>
                 </li>
               ))}
             </ul>
@@ -390,76 +485,22 @@ const KafkaControls = () => {
           )}
         </div>
       </div>
-
       {/* Get Topic Details Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Get Topic Details</h2>
+      <div className="card shadow-lg p-4 border-0">
+        <h2 className="text-primary text-center mb-3">
+          <i className="bi bi-info-circle"></i> Get Topic Details
+        </h2>
 
-        <label htmlFor="topic-dropdown" style={styles.label}>
-          Select a Topic:
-        </label>
-        <select
-          id="topic-dropdown"
-          value={topicNameForDetails}
-          onChange={(e) => setTopicNameForDetails(e.target.value)}
-          style={styles.input}
-        >
-          <option value="">-- Select a Topic --</option>
-          {topics.map((topic) => (
-            <option key={topic} value={topic}>
-              {topic}
-            </option>
-          ))}
-        </select>
-
-        <button
-          style={styles.button}
-          onClick={handleGetTopicDetails}
-          disabled={isLoading || !topicNameForDetails}
-        >
-          {isLoading ? "Loading..." : "Get Topic Details"}
-        </button>
-
-        {/* Display Topic Details in a Table */}
-        {topicDetails && (
-          <div style={styles.detailsContainer}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th>Topic Name</th>
-                  <th>Partition</th>
-                  <th>Leader</th>
-                  <th>Replicas</th>
-                  <th>ISR</th>
-                </tr>
-              </thead>
-              <tbody>
-                {topicDetails.partitions.map((partition, index) => (
-                  <tr key={index}>
-                    <td>{topicDetails.name}</td> {/* Display topic name here */}
-                    <td>{partition.partition}</td>
-                    <td>{partition.leader.empty ? "None" : "Available"}</td>
-                    <td>{partition.replicas.length}</td>
-                    <td>{partition.isr.length}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      <div>
-        {/* Push Kafka Message */}
+        {/* Topic Selection Dropdown */}
         <div className="mb-3">
-          <label htmlFor="topic-select" className="form-label fw-bold">
-            Select Topic:
+          <label htmlFor="topic-dropdown" className="form-label fw-bold">
+            Select a Topic:
           </label>
           <select
-            id="topic-select"
+            id="topic-dropdown"
             className="form-select"
-            onChange={(e) => setSelectedTopic(e.target.value)}
-            value={selectedTopic}
+            value={topicNameForDetails}
+            onChange={(e) => setTopicNameForDetails(e.target.value)}
           >
             <option value="">-- Select a Topic --</option>
             {topics.map((topic) => (
@@ -470,55 +511,186 @@ const KafkaControls = () => {
           </select>
         </div>
 
-        <div style={styles.section}>
-          <h3 style={styles.sectionHeader}>Push Message</h3>
-          <textarea
-            placeholder="Enter message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            rows={6} // Increased height
-            cols={50} // Increased width
-            style={{
-              ...styles.textarea,
-              minHeight: "120px", // More vertical space
-              width: "100%", // Takes full width
-              fontSize: "16px", // Better readability
-              padding: "10px", // More spacing
-              borderRadius: "8px", // Smoother corners
-              border: "1px solid #ccc", // Subtle border
-              resize: "vertical", // Allows vertical resizing only
-            }}
-          />
-          <button style={styles.button} onClick={sendMessage}>
-            Send Message
+        {/* Fetch Details Button */}
+        <button
+          className="btn btn-success w-100 mb-3 fw-bold"
+          onClick={handleGetTopicDetails}
+          disabled={isLoading || !topicNameForDetails}
+        >
+          {isLoading ? (
+            <span>
+              <i className="spinner-border spinner-border-sm me-2"></i>{" "}
+              Loading...
+            </span>
+          ) : (
+            <span>
+              <i className="bi bi-search me-2"></i> Get Topic Details
+            </span>
+          )}
+        </button>
+
+        {/* Display Topic Details in a Responsive Table */}
+        {topicDetails && (
+          <div className="table-responsive mt-3">
+            <table className="table table-bordered table-hover">
+              <thead className="table-dark text-center">
+                <tr>
+                  <th>Topic Name</th>
+                  <th>Partition</th>
+                  <th>Leader</th>
+                  <th>Replicas</th>
+                  <th>ISR</th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {topicDetails.partitions.map((partition, index) => (
+                  <tr key={index}>
+                    <td className="fw-bold text-primary">
+                      {topicDetails.name}
+                    </td>
+                    <td>{partition.partition}</td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          partition.leader.empty ? "bg-danger" : "bg-success"
+                        }`}
+                      >
+                        {partition.leader.empty ? "None" : "Available"}
+                      </span>
+                    </td>
+                    <td>{partition.replicas.length}</td>
+                    <td>{partition.isr.length}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+      <div>
+        {/* Push Kafka Message Section */}
+        <div className="card shadow-lg p-4 border-0">
+          <h2 className="text-primary text-center mb-3">
+            <i className="bi bi-envelope-paper"></i> Push Kafka Message
+          </h2>
+
+          {/* Topic Selection Dropdown */}
+          <div className="mb-3">
+            <label htmlFor="topic-select" className="form-label fw-bold">
+              Select Topic:
+            </label>
+            <select
+              id="topic-select"
+              className="form-select"
+              onChange={(e) => setSelectedTopic(e.target.value)}
+              value={selectedTopic}
+            >
+              <option value="">-- Select a Topic --</option>
+              {topics.map((topic) => (
+                <option key={topic} value={topic}>
+                  {topic}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Message Input TextArea */}
+          <div className="mb-3">
+            <label htmlFor="message-input" className="form-label fw-bold">
+              Enter Message:
+            </label>
+            <textarea
+              id="message-input"
+              className="form-control"
+              placeholder="Type your message here..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              rows={5} // Proper height
+              style={{
+                fontSize: "16px",
+                padding: "12px",
+                borderRadius: "8px",
+                resize: "vertical",
+              }}
+            />
+          </div>
+
+          {/* Send Message Button */}
+          <button
+            className="btn btn-success w-100 fw-bold"
+            onClick={sendMessage}
+            disabled={!selectedTopic || !message}
+          >
+            <i className="bi bi-send-fill me-2"></i> Send Message
           </button>
         </div>
 
-        {/* Consume Kafka Message */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionHeader}>Consume Messages</h3>
-          <button style={styles.button} onClick={consumeMessages}>
-            Fetch Messages
+        {/* Consume Kafka Message Section */}
+        <div className="card shadow-lg p-4 border-0">
+          <h2 className="text-danger text-center mb-3">
+            <i className="bi bi-chat-dots-fill"></i> Consume Messages
+          </h2>
+
+          {/* Fetch Messages Button */}
+          <button
+            className="btn btn-warning w-100 fw-bold"
+            onClick={consumeMessages}
+          >
+            <i className="bi bi-arrow-repeat me-2"></i> Fetch Messages
           </button>
-          <pre style={styles.pre}>{consumedMessages}</pre>
+
+          {/* Display Consumed Messages */}
+          <div
+            className="border rounded mt-3 p-3 bg-light overflow-auto"
+            style={{
+              maxHeight: "250px",
+              whiteSpace: "pre-wrap",
+              fontSize: "14px",
+            }}
+          >
+            {consumedMessages ? (
+              <pre className="m-0">{consumedMessages}</pre>
+            ) : (
+              <p className="text-muted text-center">
+                <i className="bi bi-exclamation-circle-fill me-2"></i> No
+                messages available
+              </p>
+            )}
+          </div>
         </div>
       </div>
-
       {/* Delete Logs Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionHeader}>Delete Kafka Logs</h2>
+      <div className="card shadow-lg p-4 border-0">
+        <h2 className="text-danger text-center mb-3">
+          <i className="bi bi-trash-fill"></i> Delete Kafka Logs
+        </h2>
+
+        {/* Delete Button */}
         <button
-          style={{ ...styles.button, backgroundColor: "#dc3545" }} // Red color for delete
+          className="btn btn-danger w-100 fw-bold"
           onClick={() => {
             setIsDeleting(true);
             handleAction(API_ENDPOINTS.DELETE_LOGS_URL, "DELETE", {}, "delete");
           }}
           disabled={isDeleting || isLoading}
         >
-          {isDeleting ? "Deleting..." : "Delete Logs"}
+          {isDeleting ? (
+            <span>
+              <i className="spinner-border spinner-border-sm me-2"></i>{" "}
+              Deleting...
+            </span>
+          ) : (
+            <span>
+              <i className="bi bi-trash3 me-2"></i> Delete Logs
+            </span>
+          )}
         </button>
+
+        {/* Response Message */}
         {deleteLogsResponse && (
-          <p style={styles.responseMessage}>{deleteLogsResponse}</p>
+          <div className="alert alert-warning mt-3 text-center">
+            {deleteLogsResponse}
+          </div>
         )}
       </div>
     </div>

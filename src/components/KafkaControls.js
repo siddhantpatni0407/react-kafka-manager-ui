@@ -845,7 +845,7 @@ const KafkaControls = () => {
             </select>
           </div>
 
-          {/* Fetch Messages Button */}
+          {/* Fetch Topic Messages Button */}
           <button
             className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
             onClick={consumeMessages}

@@ -569,6 +569,61 @@ const KafkaControls = () => {
         )}
       </div>
 
+      {/* Delete Kafka Topic Section */}
+      <div className="card shadow-lg p-4 border-0 mt-4">
+        <h4 className="text-danger text-center mb-3 fw-bold">
+          <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
+        </h4>
+
+        {/* Topic Selection Dropdown */}
+        <div className="mb-3">
+          <label htmlFor="delete-topic-select" className="form-label fw-bold">
+            Select Topic:
+          </label>
+          <select
+            id="delete-topic-select"
+            className="form-select"
+            onChange={(e) => setTopicToDelete(e.target.value)}
+            value={topicToDelete}
+            aria-label="Select Kafka Topic to Delete"
+          >
+            <option value="">-- Select a Topic --</option>
+            {topics.map((topic) => (
+              <option key={topic} value={topic}>
+                {topic}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Delete Topic Button */}
+        <button
+          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          onClick={deleteKafkaTopic}
+          disabled={!topicToDelete || isDeletingTopic}
+        >
+          {isDeletingTopic ? (
+            <>
+              <i className="spinner-border spinner-border-sm"></i> Deleting...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-trash"></i> Delete Topic
+            </>
+          )}
+        </button>
+
+        {/* Response Message */}
+        {deleteTopicResponse && (
+          <div
+            className="alert alert-warning mt-3 text-center fw-bold shadow-sm"
+            role="alert"
+          >
+            {deleteTopicResponse}
+          </div>
+        )}
+      </div>
+
       {/* View All Topics Section */}
       <div className="card shadow-lg p-4 border-0">
         <h4 className="text-primary text-center mb-3 fw-bold">
@@ -672,6 +727,8 @@ const KafkaControls = () => {
                   <th>Leader</th>
                   <th>Replicas</th>
                   <th>ISR</th>
+                  <th>Total Messages</th>
+                  <th>Total Lag</th>
                 </tr>
               </thead>
               <tbody>
@@ -692,65 +749,12 @@ const KafkaControls = () => {
                     </td>
                     <td>{partition.replicas.length}</td>
                     <td>{partition.isr.length}</td>
+                    <td>{topicDetails.totalMessages}</td>
+                    <td>{topicDetails.totalLag}</td> {/* Display total lag */}
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
-      </div>
-
-      {/* Delete Kafka Topic Section */}
-      <div className="card shadow-lg p-4 border-0 mt-4">
-        <h4 className="text-danger text-center mb-3 fw-bold">
-          <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
-        </h4>
-
-        {/* Topic Selection Dropdown */}
-        <div className="mb-3">
-          <label htmlFor="delete-topic-select" className="form-label fw-bold">
-            Select Topic:
-          </label>
-          <select
-            id="delete-topic-select"
-            className="form-select"
-            onChange={(e) => setTopicToDelete(e.target.value)}
-            value={topicToDelete}
-            aria-label="Select Kafka Topic to Delete"
-          >
-            <option value="">-- Select a Topic --</option>
-            {topics.map((topic) => (
-              <option key={topic} value={topic}>
-                {topic}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Delete Topic Button */}
-        <button
-          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
-          onClick={deleteKafkaTopic}
-          disabled={!topicToDelete || isDeletingTopic}
-        >
-          {isDeletingTopic ? (
-            <>
-              <i className="spinner-border spinner-border-sm"></i> Deleting...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-trash"></i> Delete Topic
-            </>
-          )}
-        </button>
-
-        {/* Response Message */}
-        {deleteTopicResponse && (
-          <div
-            className="alert alert-warning mt-3 text-center fw-bold shadow-sm"
-            role="alert"
-          >
-            {deleteTopicResponse}
           </div>
         )}
       </div>

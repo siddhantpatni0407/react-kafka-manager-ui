@@ -38,6 +38,10 @@ const KafkaControls = () => {
   const [isCheckingHealth, setIsCheckingHealth] = useState(false);
   const [kafkaHealthStatus, setKafkaHealthStatus] = useState("");
 
+  const [topicToDelete, setTopicToDelete] = useState("");
+  const [isDeletingTopic, setIsDeletingTopic] = useState(false);
+  const [deleteTopicResponse, setDeleteTopicResponse] = useState("");
+
   const checkKafkaHealth = async () => {
     try {
       setIsCheckingHealth(true);
@@ -251,6 +255,44 @@ const KafkaControls = () => {
     }
 
     handleAction(url, "POST", {}, "create");
+  };
+
+  const deleteKafkaTopic = async () => {
+    if (!topicToDelete) {
+      setDeleteTopicResponse("Please select a topic to delete.");
+      return;
+    }
+
+    try {
+      setIsDeletingTopic(true);
+
+      // Use query parameter instead of request body
+      const url = `${
+        API_ENDPOINTS.DELETE_KAFKA_TOPIC_URL
+      }?topicName=${encodeURIComponent(topicToDelete)}`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status} - ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      setDeleteTopicResponse(data?.message || "Topic deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting topic:", error);
+      setDeleteTopicResponse(`Failed to delete topic: ${error.message}`);
+    } finally {
+      setIsDeletingTopic(false);
+    }
   };
 
   const handleGetTopicDetails = () => {
@@ -654,6 +696,61 @@ const KafkaControls = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+      </div>
+
+      {/* Delete Kafka Topic Section */}
+      <div className="card shadow-lg p-4 border-0 mt-4">
+        <h4 className="text-danger text-center mb-3 fw-bold">
+          <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
+        </h4>
+
+        {/* Topic Selection Dropdown */}
+        <div className="mb-3">
+          <label htmlFor="delete-topic-select" className="form-label fw-bold">
+            Select Topic:
+          </label>
+          <select
+            id="delete-topic-select"
+            className="form-select"
+            onChange={(e) => setTopicToDelete(e.target.value)}
+            value={topicToDelete}
+            aria-label="Select Kafka Topic to Delete"
+          >
+            <option value="">-- Select a Topic --</option>
+            {topics.map((topic) => (
+              <option key={topic} value={topic}>
+                {topic}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Delete Topic Button */}
+        <button
+          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          onClick={deleteKafkaTopic}
+          disabled={!topicToDelete || isDeletingTopic}
+        >
+          {isDeletingTopic ? (
+            <>
+              <i className="spinner-border spinner-border-sm"></i> Deleting...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-trash"></i> Delete Topic
+            </>
+          )}
+        </button>
+
+        {/* Response Message */}
+        {deleteTopicResponse && (
+          <div
+            className="alert alert-warning mt-3 text-center fw-bold shadow-sm"
+            role="alert"
+          >
+            {deleteTopicResponse}
           </div>
         )}
       </div>

@@ -201,7 +201,7 @@ const KafkaControls = () => {
           break;
       }
 
-      alert(response.data.status); // Display the success message
+      //alert(response.data.status); // Display the success message
     } catch (error) {
       if (error.response) {
         alert("Error: " + (error.response?.data?.message || error.message));

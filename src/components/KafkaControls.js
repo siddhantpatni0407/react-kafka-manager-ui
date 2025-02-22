@@ -42,6 +42,13 @@ const KafkaControls = () => {
   const [isDeletingTopic, setIsDeletingTopic] = useState(false);
   const [deleteTopicResponse, setDeleteTopicResponse] = useState("");
 
+  const [format, setFormat] = useState("plain");
+  const [maxMessages, setMaxMessages] = useState(1);
+  const [fromBeginning, setFromBeginning] = useState(false);
+  const [group, setGroup] = useState("");
+  const [timeoutMs, setTimeoutMs] = useState(10000);
+  const [responseMessage, setResponseMessage] = useState("");
+
   const checkKafkaHealth = async () => {
     try {
       setIsCheckingHealth(true);
@@ -90,7 +97,7 @@ const KafkaControls = () => {
       setConsumeMessageResponse("⚠️ Please select a topic.");
       return;
     }
-  
+
     try {
       const response = await axios.get(
         API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL,
@@ -98,8 +105,11 @@ const KafkaControls = () => {
           params: { topicName: selectedConsumeTopic },
         }
       );
-  
-      if (response.data.status && response.data.status.includes("No messages")) {
+
+      if (
+        response.data.status &&
+        response.data.status.includes("No messages")
+      ) {
         setConsumedMessages(""); // Clear any previously fetched messages
         setConsumeMessageResponse(
           "❌ No messages available in this topic. Please ensure messages have been pushed."
@@ -112,10 +122,63 @@ const KafkaControls = () => {
       }
     } catch (error) {
       console.error("Error consuming messages:", error);
-      setConsumeMessageResponse("❌ Failed to fetch messages. Please try again.");
+      setConsumeMessageResponse(
+        "❌ Failed to fetch messages. Please try again."
+      );
     }
   };
-  
+
+  const consumeLatestMessage = async () => {
+    if (!selectedConsumeTopic) return;
+
+    try {
+      // Use the constant API endpoint for the latest message
+      const response = await fetch(
+        `${API_ENDPOINTS.KAFKA_CONSUME_LATEST_MESSAGE_URL}?topicName=${selectedConsumeTopic}`
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setConsumeMessageResponse(
+          `Latest message consumed from topic '${selectedConsumeTopic}'`
+        );
+        setConsumedMessages(data.message);
+      } else {
+        setConsumeMessageResponse(
+          data.status || "Failed to consume latest message"
+        );
+        setConsumedMessages(null);
+      }
+    } catch (error) {
+      console.error("Error consuming latest message:", error);
+      setConsumeMessageResponse("Error consuming latest message");
+      setConsumedMessages(null);
+    }
+  };
+
+  const consumeMessagesWithOptions = async () => {
+    try {
+      const response = await axios.get(
+        API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_WITH_OPTIONS_URL,
+        {
+          params: {
+            topicName: selectedTopic,
+            format,
+            maxMessages,
+            fromBeginning,
+            partition: partition || "",
+            group: group || "",
+            timeoutMs,
+          },
+        }
+      );
+      setResponseMessage(response.data.status);
+      setConsumedMessages(response.data.messages || "");
+    } catch (error) {
+      setResponseMessage("Error consuming messages");
+      console.error("Error:", error);
+    }
+  };
 
   const handlePathChange = (event) => {
     setKafkaUserDefinedPath(event.target.value.trim()); // Store raw path
@@ -574,61 +637,6 @@ const KafkaControls = () => {
         )}
       </div>
 
-      {/* Delete Kafka Topic Section */}
-      <div className="card shadow-lg p-4 border-0 mt-4">
-        <h4 className="text-danger text-center mb-3 fw-bold">
-          <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
-        </h4>
-
-        {/* Topic Selection Dropdown */}
-        <div className="mb-3">
-          <label htmlFor="delete-topic-select" className="form-label fw-bold">
-            Select Topic:
-          </label>
-          <select
-            id="delete-topic-select"
-            className="form-select"
-            onChange={(e) => setTopicToDelete(e.target.value)}
-            value={topicToDelete}
-            aria-label="Select Kafka Topic to Delete"
-          >
-            <option value="">-- Select a Topic --</option>
-            {topics.map((topic) => (
-              <option key={topic} value={topic}>
-                {topic}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Delete Topic Button */}
-        <button
-          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
-          onClick={deleteKafkaTopic}
-          disabled={!topicToDelete || isDeletingTopic}
-        >
-          {isDeletingTopic ? (
-            <>
-              <i className="spinner-border spinner-border-sm"></i> Deleting...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-trash"></i> Delete Topic
-            </>
-          )}
-        </button>
-
-        {/* Response Message */}
-        {deleteTopicResponse && (
-          <div
-            className="alert alert-warning mt-3 text-center fw-bold shadow-sm"
-            role="alert"
-          >
-            {deleteTopicResponse}
-          </div>
-        )}
-      </div>
-
       {/* View All Topics Section */}
       <div className="card shadow-lg p-4 border-0">
         <h4 className="text-primary text-center mb-3 fw-bold">
@@ -814,7 +822,7 @@ const KafkaControls = () => {
         {/* Consume Kafka Message Section */}
         <div className="card shadow-lg p-4 border-0 mt-4">
           <h4 className="text-danger text-center mb-3 fw-bold">
-            <i className="bi bi-chat-dots-fill fs-6"></i> Consume Messages
+            <i className="bi bi-chat-dots-fill fs-6"></i> Consume All Messages
           </h4>
 
           {/* Topic Selection Dropdown */}
@@ -850,6 +858,15 @@ const KafkaControls = () => {
             <i className="bi bi-arrow-repeat"></i> Fetch Messages
           </button>
 
+          {/* Fetch Latest Message Button */}
+          <button
+            className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 mt-3"
+            onClick={consumeLatestMessage}
+            disabled={!selectedConsumeTopic}
+          >
+            <i className="bi bi-clock-history"></i> Fetch Latest Message
+          </button>
+
           {/* Display Response Message */}
           {consumeMessageResponse && (
             <div className="alert alert-info alert-dismissible fade show mt-3 text-center fw-bold">
@@ -878,6 +895,247 @@ const KafkaControls = () => {
             )
           )}
         </div>
+      </div>
+
+      <div className="card shadow-lg p-4 border-0 mt-4">
+        <h4 className="text-danger text-center mb-3 fw-bold">
+          <i className="bi bi-chat-dots-fill fs-6"></i> Consume Messages with
+          Options
+        </h4>
+
+        <form>
+          <table className="table table-bordered">
+            <tbody>
+              {/* Topic Selection */}
+              <tr>
+                <td className="fw-bold">Select Topic:</td>
+                <td>
+                  <select
+                    id="consume-topic-select"
+                    className="form-select"
+                    onChange={(e) => setSelectedTopic(e.target.value)}
+                    value={selectedTopic}
+                  >
+                    <option value="">-- Select a Topic --</option>
+                    {topics.map((topic) => (
+                      <option key={topic} value={topic}>
+                        {topic}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+
+              {/* Format Selection */}
+              <tr>
+                <td className="fw-bold">Select Format:</td>
+                <td>
+                  <select
+                    id="consume-format"
+                    className="form-select"
+                    onChange={(e) => setFormat(e.target.value)}
+                    value={format}
+                  >
+                    <option value="plain">Plain</option>
+                    <option value="json">JSON</option>
+                  </select>
+                </td>
+              </tr>
+
+              {/* Max Messages */}
+              <tr>
+                <td className="fw-bold">Max Messages:</td>
+                <td>
+                  <input
+                    id="max-messages"
+                    type="number"
+                    className="form-control"
+                    value={maxMessages}
+                    onChange={(e) => setMaxMessages(Number(e.target.value))}
+                    min="1"
+                  />
+                </td>
+              </tr>
+
+              {/* From Beginning */}
+              <tr>
+                <td className="fw-bold">From Beginning:</td>
+                <td>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="fromBeginning"
+                      id="fromBeginningYes"
+                      value="true"
+                      checked={fromBeginning === true}
+                      onChange={() => setFromBeginning(true)}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="fromBeginningYes"
+                    >
+                      Yes
+                    </label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="fromBeginning"
+                      id="fromBeginningNo"
+                      value="false"
+                      checked={fromBeginning === false}
+                      onChange={() => setFromBeginning(false)}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="fromBeginningNo"
+                    >
+                      No
+                    </label>
+                  </div>
+                </td>
+              </tr>
+
+              {/* Partition */}
+              <tr>
+                <td className="fw-bold">Partition (optional):</td>
+                <td>
+                  <input
+                    id="partition"
+                    type="number"
+                    className="form-control"
+                    value={partition || ""}
+                    onChange={(e) => setPartition(e.target.value)}
+                    min="0"
+                  />
+                </td>
+              </tr>
+
+              {/* Consumer Group */}
+              <tr>
+                <td className="fw-bold">Consumer Group (optional):</td>
+                <td>
+                  <input
+                    id="group"
+                    type="text"
+                    className="form-control"
+                    value={group}
+                    onChange={(e) => setGroup(e.target.value)}
+                  />
+                </td>
+              </tr>
+
+              {/* Timeout */}
+              <tr>
+                <td className="fw-bold">Timeout (ms):</td>
+                <td>
+                  <input
+                    id="timeout"
+                    type="number"
+                    className="form-control"
+                    value={timeoutMs}
+                    onChange={(e) => setTimeoutMs(Number(e.target.value))}
+                    min="1000"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Fetch Kafka Messages Button */}
+          <button
+            className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+            onClick={consumeMessagesWithOptions}
+            disabled={!selectedTopic}
+          >
+            <i className="bi bi-arrow-repeat"></i> Fetch Messages
+          </button>
+        </form>
+
+        {/* Display Response Message */}
+        {responseMessage && (
+          <div className="alert alert-info alert-dismissible fade show mt-3 text-center fw-bold">
+            {responseMessage}
+          </div>
+        )}
+
+        {/* Display Consumed Messages */}
+        {consumedMessages ? (
+          <div
+            className="border rounded mt-3 p-3 bg-light overflow-auto shadow-sm"
+            style={{
+              maxHeight: "250px",
+              whiteSpace: "pre-wrap",
+              fontSize: "14px",
+            }}
+          >
+            <pre className="m-0 text-success fw-bold">{consumedMessages}</pre>
+          </div>
+        ) : (
+          !responseMessage && (
+            <p className="text-muted text-center mt-3">
+              <i className="bi bi-exclamation-circle-fill me-2"></i> No messages
+              available
+            </p>
+          )
+        )}
+      </div>
+
+      {/* Delete Kafka Topic Section */}
+      <div className="card shadow-lg p-4 border-0 mt-4">
+        <h4 className="text-danger text-center mb-3 fw-bold">
+          <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
+        </h4>
+
+        {/* Topic Selection Dropdown */}
+        <div className="mb-3">
+          <label htmlFor="delete-topic-select" className="form-label fw-bold">
+            Select Topic:
+          </label>
+          <select
+            id="delete-topic-select"
+            className="form-select"
+            onChange={(e) => setTopicToDelete(e.target.value)}
+            value={topicToDelete}
+            aria-label="Select Kafka Topic to Delete"
+          >
+            <option value="">-- Select a Topic --</option>
+            {topics.map((topic) => (
+              <option key={topic} value={topic}>
+                {topic}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Delete Topic Button */}
+        <button
+          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          onClick={deleteKafkaTopic}
+          disabled={!topicToDelete || isDeletingTopic}
+        >
+          {isDeletingTopic ? (
+            <>
+              <i className="spinner-border spinner-border-sm"></i> Deleting...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-trash"></i> Delete Topic
+            </>
+          )}
+        </button>
+
+        {/* Response Message */}
+        {deleteTopicResponse && (
+          <div
+            className="alert alert-warning mt-3 text-center fw-bold shadow-sm"
+            role="alert"
+          >
+            {deleteTopicResponse}
+          </div>
+        )}
       </div>
 
       {/* Delete Logs Section */}

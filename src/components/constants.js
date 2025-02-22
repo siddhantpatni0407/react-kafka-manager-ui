@@ -8,6 +8,8 @@ export const API_ENDPOINTS = {
   GET_TOPIC_DETAILS_URL: "http://localhost:8081/api/v1/kafka-service/kafka/topic/details", // GET endpoint for getting topic details
   KAFKA_PUBLISH_MESSAGE_URL : "http://localhost:8081/api/v1/kafka-service/kafka/publish",
   KAFKA_CONSUME_MESSAGE_URL : "http://localhost:8081/api/v1/kafka-service/kafka/consume",
+  KAFKA_CONSUME_LATEST_MESSAGE_URL : "http://localhost:8081/api/v1/kafka-service/kafka/consume/latest-message",
+  KAFKA_CONSUME_MESSAGE_WITH_OPTIONS_URL : "http://localhost:8081/api/v1/kafka-service/kafka/consume/options",
   KAFKA_CONSUME_HEALTH_CHECK_URL : "http://localhost:8081/api/v1/kafka-service/kafka/health",
   DELETE_KAFKA_TOPIC_URL : "http://localhost:8081/api/v1/kafka-service/kafka/topic"
 };

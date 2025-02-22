@@ -716,43 +716,28 @@ const KafkaControls = () => {
           )}
         </button>
 
-        {/* Display Topic Details in a Responsive Table */}
+        {/* Display Topic Details */}
         {topicDetails && (
           <div className="table-responsive mt-3">
             <table className="table table-bordered table-hover table-striped text-center">
               <thead className="table-dark">
                 <tr>
                   <th>Topic Name</th>
-                  <th>Partition</th>
-                  <th>Leader</th>
-                  <th>Replicas</th>
-                  <th>ISR</th>
+                  <th>Number of Partitions</th>
                   <th>Total Messages</th>
                   <th>Total Lag</th>
                 </tr>
               </thead>
               <tbody>
-                {topicDetails.partitions.map((partition, index) => (
-                  <tr key={index}>
-                    <td className="fw-semibold text-primary">
-                      {topicDetails.name}
-                    </td>
-                    <td>{partition.partition}</td>
-                    <td>
-                      <span
-                        className={`badge rounded-pill ${
-                          partition.leader.empty ? "bg-danger" : "bg-success"
-                        }`}
-                      >
-                        {partition.leader.empty ? "None" : "Available"}
-                      </span>
-                    </td>
-                    <td>{partition.replicas.length}</td>
-                    <td>{partition.isr.length}</td>
-                    <td>{topicDetails.totalMessages}</td>
-                    <td>{topicDetails.totalLag}</td> {/* Display total lag */}
-                  </tr>
-                ))}
+                <tr>
+                  <td className="fw-semibold text-primary">
+                    {topicDetails.topicName}
+                  </td>
+                  <td>{topicDetails.partitionCount}</td>{" "}
+                  {/* Show number of partitions */}
+                  <td>{topicDetails.totalMessages}</td>
+                  <td>{topicDetails.totalLag}</td> {/* Display total lag */}
+                </tr>
               </tbody>
             </table>
           </div>

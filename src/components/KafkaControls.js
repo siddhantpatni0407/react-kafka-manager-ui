@@ -90,7 +90,7 @@ const KafkaControls = () => {
       setConsumeMessageResponse("⚠️ Please select a topic.");
       return;
     }
-
+  
     try {
       const response = await axios.get(
         API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL,
@@ -98,11 +98,8 @@ const KafkaControls = () => {
           params: { topicName: selectedConsumeTopic },
         }
       );
-
-      if (
-        response.data.status &&
-        response.data.status.includes("No messages")
-      ) {
+  
+      if (response.data.status && response.data.status.includes("No messages")) {
         setConsumedMessages(""); // Clear any previously fetched messages
         setConsumeMessageResponse(
           "❌ No messages available in this topic. Please ensure messages have been pushed."
@@ -115,11 +112,10 @@ const KafkaControls = () => {
       }
     } catch (error) {
       console.error("Error consuming messages:", error);
-      setConsumeMessageResponse(
-        "❌ Failed to fetch messages. Please try again."
-      );
+      setConsumeMessageResponse("❌ Failed to fetch messages. Please try again.");
     }
   };
+  
 
   const handlePathChange = (event) => {
     setKafkaUserDefinedPath(event.target.value.trim()); // Store raw path

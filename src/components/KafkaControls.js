@@ -23,7 +23,8 @@ const KafkaControls = () => {
 
   // New states for Kafka Setup
   const [kafkaAutoSetupRequired, setKafkaAutoSetupRequired] = useState(false);
-  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] = useState(false);
+  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] =
+    useState(false);
   const [kafkaUserDefinedPath, setKafkaUserDefinedPath] = useState("");
   const [setupKafkaResponse, setSetupKafkaResponse] = useState("");
 
@@ -582,16 +583,16 @@ const KafkaControls = () => {
       </div>
 
       {/* Create Topic Section */}
-      <div className="card shadow-lg p-4 border-0 text-center">
-        <h4 className="text-primary mb-3 fw-bold">
-          <i className="bi bi-plus-circle fs-6"></i> Create Kafka Topic
+      <div className="card shadow-lg p-4 border-0 text-center bg-light rounded-4 animate__animated animate__fadeIn">
+        <h4 className="text-primary mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <i className="bi bi-plus-circle fs-5"></i> Create Kafka Topic
         </h4>
 
         {/* Topic Name Input */}
-        <div className="mb-3">
+        <div className="mb-3 position-relative">
           <input
             type="text"
-            className="form-control shadow-sm"
+            className="form-control shadow-sm border-primary rounded-3"
             placeholder="Enter topic name"
             value={createTopicName}
             onChange={(e) => setCreateTopicName(e.target.value)}
@@ -600,10 +601,10 @@ const KafkaControls = () => {
         </div>
 
         {/* Partitions Input */}
-        <div className="mb-3">
+        <div className="mb-3 position-relative">
           <input
             type="text"
-            className="form-control shadow-sm"
+            className="form-control shadow-sm border-primary rounded-3"
             placeholder="Enter number of partitions (optional)"
             value={partition}
             onChange={(e) => {
@@ -613,18 +614,20 @@ const KafkaControls = () => {
                 setPartitionError("");
               } else {
                 setPartition(value);
-                setPartitionError("Please enter a valid partition value..");
+                setPartitionError("Please enter a valid partition value.");
               }
             }}
             min="1"
             aria-label="Enter number of partitions"
           />
-          {partitionError && <div className="text-danger mt-1">{partitionError}</div>}
+          {partitionError && (
+            <div className="text-danger mt-1 small">{partitionError}</div>
+          )}
         </div>
 
         {/* Create Topic Button */}
         <button
-          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
           onClick={handleCreateTopic}
           disabled={!createTopicName.trim() || isCreating || isLoading}
         >
@@ -641,21 +644,21 @@ const KafkaControls = () => {
 
         {/* Response Message */}
         {createTopicResponse && (
-          <div className="alert alert-success mt-3 fw-bold shadow-sm">
+          <div className="alert alert-success mt-3 fw-bold shadow-sm rounded-3 animate__animated animate__fadeInUp">
             {createTopicResponse}
           </div>
         )}
       </div>
 
       {/* View All Topics Section */}
-      <div className="card shadow-lg p-4 border-0">
-        <h4 className="text-primary text-center mb-3 fw-bold">
-          <i className="bi bi-list-task fs-6"></i> View All Kafka Topics
+      <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
+        <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <i className="bi bi-list-task fs-5"></i> View All Kafka Topics
         </h4>
 
         {/* Fetch Topics Button */}
         <button
-          className="btn btn-success fw-bold w-100 mb-3 d-flex align-items-center justify-content-center gap-2 shadow-sm"
+          className="btn btn-success fw-bold w-100 mb-3 d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
           onClick={getTopics}
           disabled={isLoading}
         >
@@ -672,7 +675,7 @@ const KafkaControls = () => {
 
         {/* Topics List Container */}
         <div
-          className="border rounded p-3 bg-light overflow-auto shadow-sm"
+          className="border rounded-4 p-3 bg-light overflow-auto shadow-sm animate__animated animate__fadeInUp"
           style={{ maxHeight: "250px" }}
         >
           {topics.length > 0 ? (
@@ -680,15 +683,17 @@ const KafkaControls = () => {
               {topics.map((topic, index) => (
                 <li
                   key={index}
-                  className="list-group-item d-flex align-items-center gap-2"
+                  className="list-group-item d-flex align-items-center gap-2 rounded-3 shadow-sm animate__animated animate__fadeInUp"
                 >
-                  <span className="badge bg-success">{index + 1}</span>
-                  <strong className="text-dark">{topic}</strong>
+                  <span className="badge bg-success rounded-pill px-3 py-2 fs-6">
+                    {index + 1}
+                  </span>
+                  <strong className="text-dark fs-5">{topic}</strong>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-muted text-center fw-semibold">
+            <p className="text-muted text-center fw-semibold animate__animated animate__shakeX">
               <i className="bi bi-exclamation-circle-fill me-2"></i> No topics
               available
             </p>
@@ -697,25 +702,25 @@ const KafkaControls = () => {
       </div>
 
       {/* Get Topic Details Section */}
-      <div className="card shadow-lg p-4 border-0">
-        <h4 className="text-primary text-center mb-3 fw-bold">
-          <i className="bi bi-info-circle fs-6"></i> Get Topic Details
+      <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
+        <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <i className="bi bi-info-circle fs-5"></i> Get Topic Details
         </h4>
 
         {/* Topic Selection Dropdown */}
-        <div className="mb-3">
+        <div className="mb-3 position-relative">
           <label htmlFor="topic-dropdown" className="form-label fw-semibold">
             Select a Topic:
           </label>
           <select
             id="topic-dropdown"
-            className="form-select shadow-sm"
+            className="form-select shadow-sm border-primary rounded-3"
             value={topicNameForDetails}
             onChange={(e) => setTopicNameForDetails(e.target.value)}
           >
             <option value="">-- Select a Topic --</option>
             {topics.map((topic) => (
-              <option key={topic} value={topic}>
+              <option key={topic} value={topic} className="fw-semibold">
                 {topic}
               </option>
             ))}
@@ -724,7 +729,7 @@ const KafkaControls = () => {
 
         {/* Fetch Details Button */}
         <button
-          className="btn btn-success w-100 mb-3 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+          className="btn btn-success w-100 mb-3 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
           onClick={handleGetTopicDetails}
           disabled={isLoading || !topicNameForDetails}
         >
@@ -741,8 +746,8 @@ const KafkaControls = () => {
 
         {/* Display Topic Details */}
         {topicDetails && (
-          <div className="table-responsive mt-3">
-            <table className="table table-bordered table-hover table-striped text-center">
+          <div className="table-responsive mt-3 animate__animated animate__fadeInUp">
+            <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-sm">
               <thead className="table-dark">
                 <tr>
                   <th>Topic Name</th>
@@ -756,10 +761,9 @@ const KafkaControls = () => {
                   <td className="fw-semibold text-primary">
                     {topicDetails.topicName}
                   </td>
-                  <td>{topicDetails.partitionCount}</td>{" "}
-                  {/* Show number of partitions */}
+                  <td>{topicDetails.partitionCount}</td>
                   <td>{topicDetails.totalMessages}</td>
-                  <td>{topicDetails.totalLag}</td> {/* Display total lag */}
+                  <td>{topicDetails.totalLag}</td>
                 </tr>
               </tbody>
             </table>
@@ -769,26 +773,26 @@ const KafkaControls = () => {
 
       <div>
         {/* Publish Kafka Message Section */}
-        <div className="card shadow-lg p-4 border-0 mb-2">
-          <h4 className="text-primary text-center mb-3 fw-bold">
-            <i className="bi bi-envelope-paper fs-6"></i> Publish Kafka Message
+        <div className="card shadow-lg p-4 border-0 mb-2 bg-light rounded-4 animate__animated animate__fadeIn">
+          <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+            <i className="bi bi-envelope-paper fs-5"></i> Publish Kafka Message
           </h4>
 
           {/* Topic Selection Dropdown */}
-          <div className="mb-3">
+          <div className="mb-3 position-relative">
             <label htmlFor="topic-select" className="form-label fw-bold">
               Select Topic:
             </label>
             <select
               id="topic-select"
-              className="form-select"
+              className="form-select shadow-sm border-primary rounded-3"
               onChange={(e) => setSelectedTopic(e.target.value)}
               value={selectedTopic}
               aria-label="Select Kafka Topic"
             >
               <option value="">-- Select a Topic --</option>
               {topics.map((topic) => (
-                <option key={topic} value={topic}>
+                <option key={topic} value={topic} className="fw-semibold">
                   {topic}
                 </option>
               ))}
@@ -796,13 +800,13 @@ const KafkaControls = () => {
           </div>
 
           {/* Message Input TextArea */}
-          <div className="mb-3">
+          <div className="mb-3 position-relative">
             <label htmlFor="message-input" className="form-label fw-bold">
               Enter Message:
             </label>
             <textarea
               id="message-input"
-              className="form-control"
+              className="form-control shadow-sm border-primary rounded-3"
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -814,7 +818,7 @@ const KafkaControls = () => {
 
           {/* Send Message Button */}
           <button
-            className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
             onClick={sendMessage}
             disabled={!selectedTopic || !message.trim()}
           >
@@ -823,20 +827,20 @@ const KafkaControls = () => {
 
           {/* Display Response Message */}
           {sendMessageResponse && (
-            <div className="alert alert-info alert-dismissible fade show mt-3 text-center fw-bold">
+            <div className="alert alert-info alert-dismissible fade show mt-3 text-center fw-bold animate__animated animate__fadeInUp">
               {sendMessageResponse}
             </div>
           )}
         </div>
 
         {/* Consume Kafka Message Section */}
-        <div className="card shadow-lg p-4 border-0 mt-4">
-          <h4 className="text-danger text-center mb-3 fw-bold">
-            <i className="bi bi-chat-dots-fill fs-6"></i> Consume All Messages
+        <div className="card shadow-lg p-4 border-0 mt-4 bg-light rounded-4 animate__animated animate__fadeIn">
+          <h4 className="text-danger text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+            <i className="bi bi-chat-dots-fill fs-5"></i> Consume All Messages
           </h4>
 
           {/* Topic Selection Dropdown */}
-          <div className="mb-3">
+          <div className="mb-3 position-relative">
             <label
               htmlFor="consume-topic-select"
               className="form-label fw-bold"
@@ -845,14 +849,14 @@ const KafkaControls = () => {
             </label>
             <select
               id="consume-topic-select"
-              className="form-select"
+              className="form-select shadow-sm border-danger rounded-3"
               onChange={(e) => setSelectedConsumeTopic(e.target.value)}
               value={selectedConsumeTopic}
               aria-label="Select Kafka Topic to Consume Messages"
             >
               <option value="">-- Select a Topic --</option>
               {topics.map((topic) => (
-                <option key={topic} value={topic}>
+                <option key={topic} value={topic} className="fw-semibold">
                   {topic}
                 </option>
               ))}
@@ -861,25 +865,25 @@ const KafkaControls = () => {
 
           {/* Fetch Topic Messages Button */}
           <button
-            className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
             onClick={consumeMessages}
             disabled={!selectedConsumeTopic}
           >
-            <i className="bi bi-arrow-repeat"></i> Fetch Messages
+            <i className="bi bi-arrow-repeat"></i> Fetch all Messages
           </button>
 
           {/* Fetch Latest Message Button */}
           <button
-            className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 mt-3"
+            className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 mt-3 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
             onClick={consumeLatestMessage}
             disabled={!selectedConsumeTopic}
           >
-            <i className="bi bi-clock-history"></i> Fetch Latest Message
+            <i className="bi bi-clock-history"></i> Fetch latest Message
           </button>
 
           {/* Display Response Message */}
           {consumeMessageResponse && (
-            <div className="alert alert-info alert-dismissible fade show mt-3 text-center fw-bold">
+            <div className="alert alert-info alert-dismissible fade show mt-3 text-center fw-bold animate__animated animate__fadeInUp">
               {consumeMessageResponse}
             </div>
           )}
@@ -887,7 +891,7 @@ const KafkaControls = () => {
           {/* Display Consumed Messages */}
           {consumedMessages ? (
             <div
-              className="border rounded mt-3 p-3 bg-light overflow-auto shadow-sm"
+              className="border rounded mt-3 p-3 bg-light overflow-auto shadow-sm animate__animated animate__fadeIn"
               style={{
                 maxHeight: "250px",
                 whiteSpace: "pre-wrap",
@@ -898,7 +902,7 @@ const KafkaControls = () => {
             </div>
           ) : (
             !consumeMessageResponse && (
-              <p className="text-muted text-center mt-3">
+              <p className="text-muted text-center mt-3 animate__animated animate__fadeIn">
                 <i className="bi bi-exclamation-circle-fill me-2"></i> No
                 messages available
               </p>
@@ -914,15 +918,14 @@ const KafkaControls = () => {
         </h4>
 
         <form>
-          <table className="table table-bordered">
+          <table className="table table-bordered table-hover text-center">
             <tbody>
               {/* Topic Selection */}
               <tr>
                 <td className="fw-bold">Select Topic:</td>
                 <td>
                   <select
-                    id="consume-topic-select"
-                    className="form-select"
+                    className="form-select shadow-sm"
                     onChange={(e) => setSelectedTopic(e.target.value)}
                     value={selectedTopic}
                   >
@@ -941,8 +944,7 @@ const KafkaControls = () => {
                 <td className="fw-bold">Select Format:</td>
                 <td>
                   <select
-                    id="consume-format"
-                    className="form-select"
+                    className="form-select shadow-sm"
                     onChange={(e) => setFormat(e.target.value)}
                     value={format}
                   >
@@ -957,9 +959,8 @@ const KafkaControls = () => {
                 <td className="fw-bold">Max Messages:</td>
                 <td>
                   <input
-                    id="max-messages"
                     type="number"
-                    className="form-control"
+                    className="form-control shadow-sm"
                     value={maxMessages}
                     onChange={(e) => setMaxMessages(Number(e.target.value))}
                     min="1"
@@ -976,34 +977,22 @@ const KafkaControls = () => {
                       className="form-check-input"
                       type="radio"
                       name="fromBeginning"
-                      id="fromBeginningYes"
                       value="true"
                       checked={fromBeginning === true}
                       onChange={() => setFromBeginning(true)}
                     />
-                    <label
-                      className="form-check-label"
-                      htmlFor="fromBeginningYes"
-                    >
-                      Yes
-                    </label>
+                    <label className="form-check-label">Yes</label>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
                       className="form-check-input"
                       type="radio"
                       name="fromBeginning"
-                      id="fromBeginningNo"
                       value="false"
                       checked={fromBeginning === false}
                       onChange={() => setFromBeginning(false)}
                     />
-                    <label
-                      className="form-check-label"
-                      htmlFor="fromBeginningNo"
-                    >
-                      No
-                    </label>
+                    <label className="form-check-label">No</label>
                   </div>
                 </td>
               </tr>
@@ -1013,9 +1002,8 @@ const KafkaControls = () => {
                 <td className="fw-bold">Partition (optional):</td>
                 <td>
                   <input
-                    id="partition"
                     type="number"
-                    className="form-control"
+                    className="form-control shadow-sm"
                     value={partition || ""}
                     onChange={(e) => setPartition(e.target.value)}
                     min="0"
@@ -1028,9 +1016,8 @@ const KafkaControls = () => {
                 <td className="fw-bold">Consumer Group (optional):</td>
                 <td>
                   <input
-                    id="group"
                     type="text"
-                    className="form-control"
+                    className="form-control shadow-sm"
                     value={group}
                     onChange={(e) => setGroup(e.target.value)}
                   />
@@ -1042,9 +1029,8 @@ const KafkaControls = () => {
                 <td className="fw-bold">Timeout (ms):</td>
                 <td>
                   <input
-                    id="timeout"
                     type="number"
-                    className="form-control"
+                    className="form-control shadow-sm"
                     value={timeoutMs}
                     onChange={(e) => setTimeoutMs(Number(e.target.value))}
                     min="1000"
@@ -1056,7 +1042,7 @@ const KafkaControls = () => {
 
           {/* Fetch Kafka Messages Button */}
           <button
-            className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
             onClick={consumeMessagesWithOptions}
             disabled={!selectedTopic}
           >

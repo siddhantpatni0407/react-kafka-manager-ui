@@ -576,7 +576,7 @@ const KafkaControls = () => {
       {/* Setup Kafka Section - END*/}
 
       {/* Kafka Server Control Section - START */}
-      <div className="card shadow-lg p-4 border-0 mb-4">
+      <div className="card shadow-lg p-4 border-0 mb-4 bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
           <BiServer size={28} /> Kafka Server Controls
         </h4>
@@ -585,7 +585,12 @@ const KafkaControls = () => {
         <div className="d-flex justify-content-center gap-3 flex-wrap">
           {/* Check Kafka Health Button */}
           <button
-            className="btn btn-info fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
+            className="btn btn-info fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3 rounded-3"
+            style={{ transition: "0.3s ease-in-out", transform: "scale(1)" }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             onClick={checkKafkaHealth}
             disabled={isCheckingHealth}
             aria-disabled={isCheckingHealth}
@@ -602,7 +607,12 @@ const KafkaControls = () => {
 
           {/* Start Kafka Button */}
           <button
-            className="btn btn-success fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
+            className="btn btn-success fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3 rounded-3"
+            style={{ transition: "0.3s ease-in-out", transform: "scale(1)" }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             onClick={() => {
               setIsStarting(true);
               handleAction(API_ENDPOINTS.START_KAFKA_URL, "POST", {}, "start");
@@ -622,7 +632,12 @@ const KafkaControls = () => {
 
           {/* Stop Kafka Button */}
           <button
-            className="btn btn-danger fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
+            className="btn btn-danger fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3 rounded-3"
+            style={{ transition: "0.3s ease-in-out", transform: "scale(1)" }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             onClick={() => {
               setIsStopping(true);
               handleAction(API_ENDPOINTS.STOP_KAFKA_URL, "POST", {}, "stop");

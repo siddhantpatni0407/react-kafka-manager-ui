@@ -22,6 +22,7 @@ const KafkaControls = () => {
   const [error, setError] = useState(""); // Error message state
 
   // New states for Kafka Setup
+  const [isSettingUp, setIsSettingUp] = useState(false);
   const [kafkaAutoSetupRequired, setKafkaAutoSetupRequired] = useState(false);
   const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] =
     useState(false);
@@ -380,8 +381,11 @@ const KafkaControls = () => {
     <div style={styles.container}>
       {/* Error Message at the Top */}
       {error && (
-        <div className="alert alert-danger text-center fw-bold" role="alert">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i> {error}
+        <div
+          className="alert alert-danger text-center fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2"
+          role="alert"
+        >
+          <i className="bi bi-exclamation-triangle-fill fs-5"></i> {error}
         </div>
       )}
 
@@ -390,8 +394,14 @@ const KafkaControls = () => {
         <img
           src="/kafka-logo.png"
           alt="Kafka Logo"
-          className="img-fluid rounded shadow"
-          style={{ maxWidth: "200px", height: "auto" }}
+          className="img-fluid rounded shadow-lg"
+          style={{
+            maxWidth: "200px",
+            height: "auto",
+            transition: "transform 0.3s ease-in-out",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         />
       </div>
 
@@ -461,12 +471,34 @@ const KafkaControls = () => {
         {/* Setup Kafka Button */}
         <button
           className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
-          onClick={handleSetupKafka}
+          onClick={async () => {
+            try {
+              setIsSettingUp(true);
+              const response = await handleSetupKafka();
+              setSetupKafkaResponse(
+                response?.message || "Kafka setup successful."
+              );
+            } catch (error) {
+              setSetupKafkaResponse("Failed to setup Kafka. Please try again.");
+            } finally {
+              setIsSettingUp(false);
+            }
+          }}
           disabled={
-            kafkaUserDefinedPathRequired && !isValidPath(kafkaUserDefinedPath)
+            isSettingUp ||
+            (kafkaUserDefinedPathRequired && !isValidPath(kafkaUserDefinedPath))
           }
+          aria-disabled={isSettingUp}
         >
-          <i className="bi bi-play-fill"></i> Setup Kafka
+          {isSettingUp ? (
+            <>
+              <i className="spinner-border spinner-border-sm"></i> Setting Up...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-play-fill"></i> Setup Kafka
+            </>
+          )}
         </button>
 
         {/* Response Message */}
@@ -483,10 +515,12 @@ const KafkaControls = () => {
           <i className="bi bi-heart-pulse fs-6"></i> Check Kafka Health
         </h4>
 
+        {/* Check Kafka Health Button */}
         <button
-          className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
           onClick={checkKafkaHealth}
           disabled={isCheckingHealth}
+          aria-disabled={isCheckingHealth}
         >
           {isCheckingHealth ? (
             <>
@@ -503,7 +537,7 @@ const KafkaControls = () => {
         {kafkaHealthStatus && (
           <div
             className={`alert mt-3 text-center fw-bold shadow-sm ${
-              kafkaHealthStatus.includes("failed")
+              kafkaHealthStatus.toLowerCase().includes("failed")
                 ? "alert-danger"
                 : "alert-success"
             }`}
@@ -528,6 +562,7 @@ const KafkaControls = () => {
             handleAction(API_ENDPOINTS.START_KAFKA_URL, "POST", {}, "start");
           }}
           disabled={isStarting || isLoading}
+          aria-disabled={isStarting || isLoading}
         >
           {isStarting ? (
             <>
@@ -535,14 +570,17 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-power"></i> Start Kafka
+              <i className="bi bi-lightning-fill"></i> Start Kafka
             </>
           )}
         </button>
 
         {/* Response Message */}
         {startKafkaResponse && (
-          <div className="alert alert-success mt-3 fw-bold shadow-sm">
+          <div
+            className="alert alert-success mt-3 fw-bold shadow-sm text-center"
+            role="alert"
+          >
             {startKafkaResponse}
           </div>
         )}
@@ -562,6 +600,7 @@ const KafkaControls = () => {
             handleAction(API_ENDPOINTS.STOP_KAFKA_URL, "POST", {}, "stop");
           }}
           disabled={isStopping || isLoading}
+          aria-disabled={isStopping || isLoading}
         >
           {isStopping ? (
             <>
@@ -569,14 +608,17 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-x-circle"></i> Stop Kafka
+              <i className="bi bi-x-octagon-fill"></i> Stop Kafka
             </>
           )}
         </button>
 
         {/* Response Message */}
         {stopKafkaResponse && (
-          <div className="alert alert-danger mt-3 fw-bold shadow-sm">
+          <div
+            className="alert alert-danger mt-3 fw-bold shadow-sm text-center"
+            role="alert"
+          >
             {stopKafkaResponse}
           </div>
         )}
@@ -1108,9 +1150,10 @@ const KafkaControls = () => {
 
         {/* Delete Topic Button */}
         <button
-          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
           onClick={deleteKafkaTopic}
           disabled={!topicToDelete || isDeletingTopic}
+          aria-disabled={!topicToDelete || isDeletingTopic}
         >
           {isDeletingTopic ? (
             <>
@@ -1118,7 +1161,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-trash"></i> Delete Topic
+              <i className="bi bi-trash3-fill"></i> Delete Topic
             </>
           )}
         </button>
@@ -1135,14 +1178,14 @@ const KafkaControls = () => {
       </div>
 
       {/* Delete Logs Section */}
-      <div className="card shadow-lg p-4 border-0">
+      <div className="card shadow-lg p-4 border-0 mt-4">
         <h4 className="text-danger text-center mb-3 fw-bold">
-          <i className="bi bi-trash-fill fs-6"></i> Delete Kafka Logs
+          <i className="bi bi-trash3-fill fs-6"></i> Delete Kafka Logs
         </h4>
 
         {/* Delete Button */}
         <button
-          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
           onClick={async () => {
             try {
               setIsDeleting(true);
@@ -1177,10 +1220,7 @@ const KafkaControls = () => {
 
         {/* Response Message */}
         {deleteLogsResponse && (
-          <div
-            className="alert alert-warning mt-3 text-center fw-bold shadow-sm"
-            role="alert"
-          >
+          <div className="alert alert-warning mt-3 text-center fw-bold shadow-sm">
             {deleteLogsResponse}
           </div>
         )}

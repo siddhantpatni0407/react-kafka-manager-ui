@@ -765,7 +765,9 @@ const KafkaControls = () => {
           </label>
           <select
             id="topic-dropdown"
-            className="form-select shadow-sm border-primary rounded-3"
+            className={`form-select shadow-sm rounded-3 ${
+              topicNameForDetails ? "border-success" : "border-danger"
+            }`}
             value={topicNameForDetails}
             onChange={(e) => setTopicNameForDetails(e.target.value)}
           >
@@ -849,7 +851,9 @@ const KafkaControls = () => {
             </label>
             <select
               id="topic-select"
-              className="form-select shadow-sm border-primary rounded-3"
+              className={`form-select shadow-sm rounded-3 ${
+                selectedTopic ? "border-success" : "border-danger"
+              }`}
               onChange={(e) => setSelectedTopic(e.target.value)}
               value={selectedTopic}
               aria-label="Select Kafka Topic"
@@ -870,7 +874,9 @@ const KafkaControls = () => {
             </label>
             <textarea
               id="message-input"
-              className="form-control shadow-sm border-primary rounded-3"
+              className={`form-control shadow-sm rounded-3 ${
+                message.trim() ? "border-success" : "border-danger"
+              }`}
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -1164,7 +1170,9 @@ const KafkaControls = () => {
           </label>
           <select
             id="delete-topic-select"
-            className="form-select"
+            className={`form-select shadow-sm rounded-3 ${
+              topicToDelete ? "border-success" : "border-danger"
+            }`}
             onChange={(e) => setTopicToDelete(e.target.value)}
             value={topicToDelete}
             aria-label="Select Kafka Topic to Delete"

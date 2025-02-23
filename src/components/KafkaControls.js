@@ -394,7 +394,7 @@ const KafkaControls = () => {
       {/* Kafka Logo & Header  - START*/}
       <div className="text-center my-4">
         <img
-          src="/kafka-logo.png"
+          src="/icons/kafka-logo.png"
           alt="Kafka Logo"
           className="img-fluid rounded shadow-lg"
           style={{
@@ -519,103 +519,113 @@ const KafkaControls = () => {
           <i className="bi bi-hdd-network fs-5"></i> Kafka Server Controls
         </h4>
 
-        {/* Check Kafka Health Button - START*/}
-        <button
-          className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm mb-3"
-          onClick={checkKafkaHealth}
-          disabled={isCheckingHealth}
-          aria-disabled={isCheckingHealth}
-        >
-          {isCheckingHealth ? (
-            <>
-              <i className="spinner-border spinner-border-sm"></i> Checking...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-heart-pulse-fill"></i> Check Kafka Health
-            </>
-          )}
-        </button>
-
-        {/* Display Health Check Response */}
-        {kafkaHealthStatus && (
-          <div
-            className={`alert mt-2 text-center fw-bold shadow-sm ${
-              kafkaHealthStatus.toLowerCase().includes("failed")
-                ? "alert-danger"
-                : "alert-success"
-            }`}
-            role="alert"
+        {/* Buttons Container */}
+        <div className="d-flex justify-content-center gap-3">
+          {/* Check Kafka Health Button */}
+          <button
+            className="btn btn-info fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
+            onClick={checkKafkaHealth}
+            disabled={isCheckingHealth}
+            aria-disabled={isCheckingHealth}
           >
-            {kafkaHealthStatus}
-          </div>
-        )}
-        {/* Check Kafka Health Button - END*/}
+            <img
+              src="/icons/health-check.webp"
+              alt="Health Check"
+              width="25"
+              height="25"
+            />
+            {isCheckingHealth ? (
+              <>
+                <i className="spinner-border spinner-border-sm"></i> Checking...
+              </>
+            ) : (
+              <>Check Kafka Health</>
+            )}
+          </button>
 
-        {/* Start Kafka Button - START*/}
-        <button
-          className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm mb-3"
-          onClick={() => {
-            setIsStarting(true);
-            handleAction(API_ENDPOINTS.START_KAFKA_URL, "POST", {}, "start");
-          }}
-          disabled={isStarting || isLoading}
-          aria-disabled={isStarting || isLoading}
-        >
-          {isStarting ? (
-            <>
-              <i className="spinner-border spinner-border-sm"></i> Starting...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-lightning-fill"></i> Start Kafka
-            </>
-          )}
-        </button>
-
-        {/* Response Message for Starting */}
-        {startKafkaResponse && (
-          <div
-            className="alert alert-success mt-2 fw-bold shadow-sm text-center"
-            role="alert"
+          {/* Start Kafka Button */}
+          <button
+            className="btn btn-success fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
+            onClick={() => {
+              setIsStarting(true);
+              handleAction(API_ENDPOINTS.START_KAFKA_URL, "POST", {}, "start");
+            }}
+            disabled={isStarting || isLoading}
+            aria-disabled={isStarting || isLoading}
           >
-            {startKafkaResponse}
-          </div>
-        )}
-        {/* Start Kafka Button - END*/}
+            <img
+              src="/icons/start-server.webp"
+              alt="Start Server"
+              width="25"
+              height="25"
+            />
+            {isStarting ? (
+              <>
+                <i className="spinner-border spinner-border-sm"></i> Starting...
+              </>
+            ) : (
+              <>Start Kafka</>
+            )}
+          </button>
 
-        {/* Stop Kafka Button - START*/}
-        <button
-          className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
-          onClick={() => {
-            setIsStopping(true);
-            handleAction(API_ENDPOINTS.STOP_KAFKA_URL, "POST", {}, "stop");
-          }}
-          disabled={isStopping || isLoading}
-          aria-disabled={isStopping || isLoading}
-        >
-          {isStopping ? (
-            <>
-              <i className="spinner-border spinner-border-sm"></i> Stopping...
-            </>
-          ) : (
-            <>
-              <i className="bi bi-x-octagon-fill"></i> Stop Kafka
-            </>
-          )}
-        </button>
-
-        {/* Response Message for Stopping */}
-        {stopKafkaResponse && (
-          <div
-            className="alert alert-danger mt-2 fw-bold shadow-sm text-center"
-            role="alert"
+          {/* Stop Kafka Button */}
+          <button
+            className="btn btn-danger fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
+            onClick={() => {
+              setIsStopping(true);
+              handleAction(API_ENDPOINTS.STOP_KAFKA_URL, "POST", {}, "stop");
+            }}
+            disabled={isStopping || isLoading}
+            aria-disabled={isStopping || isLoading}
           >
-            {stopKafkaResponse}
-          </div>
-        )}
+            <img
+              src="/icons/stop-server.webp"
+              alt="Stop Server"
+              width="25"
+              height="25"
+            />
+            {isStopping ? (
+              <>
+                <i className="spinner-border spinner-border-sm"></i> Stopping...
+              </>
+            ) : (
+              <>Stop Kafka</>
+            )}
+          </button>
+        </div>
+
+        {/* Response Messages */}
+        <div className="mt-3">
+          {kafkaHealthStatus && (
+            <div
+              className={`alert text-center fw-bold shadow-sm ${
+                kafkaHealthStatus.toLowerCase().includes("failed")
+                  ? "alert-danger"
+                  : "alert-success"
+              }`}
+              role="alert"
+            >
+              {kafkaHealthStatus}
+            </div>
+          )}
+          {startKafkaResponse && (
+            <div
+              className="alert alert-success fw-bold shadow-sm text-center"
+              role="alert"
+            >
+              {startKafkaResponse}
+            </div>
+          )}
+          {stopKafkaResponse && (
+            <div
+              className="alert alert-danger fw-bold shadow-sm text-center"
+              role="alert"
+            >
+              {stopKafkaResponse}
+            </div>
+          )}
+        </div>
       </div>
-      {/* Stop Kafka Button - END*/}
       {/* Kafka Server Control Section - END */}
 
       {/* Create Topic Section - START*/}

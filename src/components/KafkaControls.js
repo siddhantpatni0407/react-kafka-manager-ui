@@ -1109,10 +1109,12 @@ const KafkaControls = () => {
             </tbody>
           </table>
 
-          {/* Fetch Kafka Messages with Options Button */}
           <button
             className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
-            onClick={consumeMessagesWithOptions}
+            onClick={(e) => {
+              e.preventDefault(); // Prevents the page from refreshing
+              consumeMessagesWithOptions();
+            }}
             disabled={!selectedTopic}
           >
             <i className="bi bi-arrow-repeat"></i> Fetch Messages with Options

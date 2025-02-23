@@ -129,7 +129,7 @@ sequenceDiagram
 
 ## Backend Application: spring-boot-kafka-storage-service
 
-The backend application, named `spring-boot-kafka-storage-service`, provides the following endpoints:
+The backend application, named `spring-boot-kafka-manager-service`, provides the following endpoints:
 
 - App Name - spring-boot-kafka-storage-service
 - Platform - Java Spring Boot
@@ -145,7 +145,7 @@ The backend application, named `spring-boot-kafka-storage-service`, provides the
 Backend Code Repository URL:
 
 ```bash
-git clone https://github.com/siddhantpatni0407/spring-boot-kafka-service.git
+git clone https://github.com/siddhantpatni0407/spring-boot-kafka-manager-service.git
 ```
 
 ## Frontend Application: react-file-storage-ui

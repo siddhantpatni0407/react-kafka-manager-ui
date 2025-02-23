@@ -718,7 +718,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-arrow-repeat"></i> Fetch Topics
+              <i className="bi bi-arrow-repeat"></i> Fetch all Topics
             </>
           )}
         </button>
@@ -886,13 +886,13 @@ const KafkaControls = () => {
             />
           </div>
 
-          {/* Send Message Button */}
+          {/* Publish Message Button */}
           <button
             className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
             onClick={sendMessage}
             disabled={!selectedTopic || !message.trim()}
           >
-            <i className="bi bi-send-fill"></i> Send Message
+            <i className="bi bi-send-fill"></i> Publish Message
           </button>
 
           {/* Display Response Message */}
@@ -1271,120 +1271,149 @@ const KafkaControls = () => {
 
 const styles = {
   container: {
-    fontFamily: "Arial, sans-serif",
+    fontFamily: "'Poppins', sans-serif",
     display: "flex",
     flexDirection: "column",
     gap: "20px",
-    padding: "25px",
-    maxWidth: "750px",
+    padding: "30px",
+    maxWidth: "800px",
     margin: "auto",
-    backgroundColor: "#fefefe",
-    borderRadius: "10px",
-    boxShadow: "0 5px 10px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
   },
   errorContainer: {
-    padding: "12px",
-    backgroundColor: "#ffe6e6",
-    border: "1px solid #ff4d4d",
-    borderRadius: "6px",
-    marginBottom: "15px",
+    padding: "14px",
+    backgroundColor: "#ffebeb",
+    border: "1px solid #dc3545",
+    borderRadius: "8px",
+    marginBottom: "20px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
   },
   errorMessage: {
-    color: "#ff0000",
+    color: "#dc3545",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: "14px",
+    fontSize: "15px",
+    flexGrow: 1,
   },
   header: {
     textAlign: "center",
-    marginBottom: "25px",
-    fontSize: "22px",
+    marginBottom: "30px",
+    fontSize: "24px",
     fontWeight: "bold",
+    color: "#343a40",
   },
   logo: {
-    width: "140px", // Responsive logo size
-    marginBottom: "15px",
+    width: "150px",
+    marginBottom: "20px",
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   section: {
     backgroundColor: "#fff",
-    padding: "15px",
-    borderRadius: "8px",
-    boxShadow: "0 3px 6px rgba(0, 0, 0, 0.08)",
-    transition: "transform 0.2s",
+    padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    transition: "transform 0.3s ease-in-out",
+  },
+  sectionHover: {
+    transform: "translateY(-5px)",
   },
   sectionHeader: {
-    fontSize: "17px",
+    fontSize: "18px",
     fontWeight: "bold",
-    color: "#333",
-    marginBottom: "10px",
+    color: "#007BFF",
+    marginBottom: "12px",
+    borderBottom: "2px solid #007BFF",
+    paddingBottom: "5px",
   },
   button: {
-    padding: "12px 20px",
-    fontSize: "15px",
+    padding: "14px",
+    fontSize: "16px",
     backgroundColor: "#007BFF",
     color: "#fff",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     cursor: "pointer",
-    transition: "background-color 0.3s, transform 0.2s",
+    transition: "all 0.3s ease-in-out",
     width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
   },
   buttonHover: {
     backgroundColor: "#0056b3",
-    transform: "scale(1.02)",
+    transform: "scale(1.05)",
   },
   input: {
-    padding: "10px",
+    padding: "12px",
     fontSize: "15px",
-    marginBottom: "12px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
+    marginBottom: "15px",
+    borderRadius: "8px",
+    border: "1px solid #ced4da",
     width: "100%",
     outline: "none",
-    transition: "border-color 0.2s ease-in-out",
+    transition: "border-color 0.3s ease-in-out",
   },
   inputFocus: {
     borderColor: "#007BFF",
+    boxShadow: "0 0 8px rgba(0, 123, 255, 0.25)",
   },
   responseMessage: {
-    color: "green",
-    marginTop: "12px",
-    fontSize: "14px",
+    color: "#28a745",
+    marginTop: "15px",
+    fontSize: "15px",
     fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "#e6f9ea",
+    padding: "10px",
+    borderRadius: "6px",
   },
   topicsContainer: {
     marginTop: "20px",
-    backgroundColor: "#fff",
-    padding: "12px",
-    borderRadius: "6px",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#ffffff",
+    padding: "15px",
+    borderRadius: "8px",
+    boxShadow: "0 3px 6px rgba(0, 0, 0, 0.1)",
   },
   topicList: {
     listStyleType: "none",
     paddingLeft: "0",
+    fontSize: "16px",
+    fontWeight: "500",
   },
   detailsContainer: {
-    backgroundColor: "#f9f9f9",
-    padding: "12px",
-    borderRadius: "6px",
+    backgroundColor: "#f8f9fa",
+    padding: "15px",
+    borderRadius: "8px",
     marginTop: "20px",
+    borderLeft: "5px solid #007BFF",
   },
   table: {
     width: "100%",
     borderCollapse: "collapse",
     marginTop: "15px",
+    borderRadius: "8px",
+    overflow: "hidden",
   },
   th: {
     textAlign: "left",
-    padding: "10px",
-    backgroundColor: "#f2f2f2",
-    border: "1px solid #ddd",
-    fontSize: "14px",
+    padding: "12px",
+    backgroundColor: "#007BFF",
+    color: "#fff",
+    border: "1px solid #dee2e6",
+    fontSize: "15px",
+    fontWeight: "bold",
   },
   td: {
-    padding: "10px",
-    border: "1px solid #ddd",
-    fontSize: "14px",
+    padding: "12px",
+    border: "1px solid #dee2e6",
+    fontSize: "15px",
   },
 };
 

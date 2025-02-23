@@ -866,7 +866,7 @@ const KafkaControls = () => {
           <div className="mt-4 animate__animated animate__fadeInUp">
             {/* Table Section */}
             <div className="table-responsive">
-              <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-sm">
+              <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-lg">
                 <thead className="table-dark">
                   <tr>
                     <th className="p-3">Topic Name</th>
@@ -880,13 +880,36 @@ const KafkaControls = () => {
                     <td className="fw-bold text-primary">
                       {topicDetails.topicName}
                     </td>
+
+                    {/* Highlighted Partitions */}
                     <td className="fw-semibold">
-                      {topicDetails.partitionCount}
+                      <span
+                        className="px-2 py-1 rounded bg-light text-info fw-bold"
+                        style={{ fontSize: "1.1rem" }}
+                      >
+                        {topicDetails.partitionCount}
+                      </span>
                     </td>
+
+                    {/* Highlighted Total Messages */}
                     <td className="fw-semibold">
-                      {topicDetails.totalMessages}
+                      <span
+                        className="px-2 py-1 rounded bg-light text-success fw-bold"
+                        style={{ fontSize: "1.1rem" }}
+                      >
+                        {topicDetails.totalMessages.toLocaleString()}
+                      </span>
                     </td>
-                    <td className="fw-semibold">{topicDetails.totalLag}</td>
+
+                    {/* Highlighted Total Lag */}
+                    <td className="fw-semibold">
+                      <span
+                        className="px-2 py-1 rounded bg-light text-danger fw-bold"
+                        style={{ fontSize: "1.1rem" }}
+                      >
+                        {topicDetails.totalLag}
+                      </span>
+                    </td>
                   </tr>
                 </tbody>
               </table>

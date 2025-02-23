@@ -513,15 +513,15 @@ const KafkaControls = () => {
       </div>
       {/* Setup Kafka Section - END*/}
 
-      {/* Check Kafka Health Section - START*/}
+      {/* Kafka Server Control Section - START */}
       <div className="card shadow-lg p-4 border-0 mb-4">
-        <h4 className="text-info text-center mb-3 fw-bold">
-          <i className="bi bi-heart-pulse fs-6"></i> Check Kafka Health
+        <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <i className="bi bi-hdd-network fs-5"></i> Kafka Server Controls
         </h4>
 
-        {/* Check Kafka Health Button */}
+        {/* Check Kafka Health Button - START*/}
         <button
-          className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+          className="btn btn-info w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm mb-3"
           onClick={checkKafkaHealth}
           disabled={isCheckingHealth}
           aria-disabled={isCheckingHealth}
@@ -540,7 +540,7 @@ const KafkaControls = () => {
         {/* Display Health Check Response */}
         {kafkaHealthStatus && (
           <div
-            className={`alert mt-3 text-center fw-bold shadow-sm ${
+            className={`alert mt-2 text-center fw-bold shadow-sm ${
               kafkaHealthStatus.toLowerCase().includes("failed")
                 ? "alert-danger"
                 : "alert-success"
@@ -550,18 +550,11 @@ const KafkaControls = () => {
             {kafkaHealthStatus}
           </div>
         )}
-      </div>
-      {/* Check Kafka Health Section - END*/}
+        {/* Check Kafka Health Button - END*/}
 
-      {/* Start Kafka Section - START*/}
-      <div className="card shadow-lg p-4 border-0 text-center">
-        <h4 className="text-success mb-3 fw-bold">
-          <i className="bi bi-play-fill fs-6"></i> Start Kafka Server
-        </h4>
-
-        {/* Start Kafka Button */}
+        {/* Start Kafka Button - START*/}
         <button
-          className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+          className="btn btn-success w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm mb-3"
           onClick={() => {
             setIsStarting(true);
             handleAction(API_ENDPOINTS.START_KAFKA_URL, "POST", {}, "start");
@@ -580,25 +573,18 @@ const KafkaControls = () => {
           )}
         </button>
 
-        {/* Response Message */}
+        {/* Response Message for Starting */}
         {startKafkaResponse && (
           <div
-            className="alert alert-success mt-3 fw-bold shadow-sm text-center"
+            className="alert alert-success mt-2 fw-bold shadow-sm text-center"
             role="alert"
           >
             {startKafkaResponse}
           </div>
         )}
-      </div>
-      {/* Start Kafka Section - END*/}
+        {/* Start Kafka Button - END*/}
 
-      {/* Stop Kafka Section - START*/}
-      <div className="card shadow-lg p-4 border-0 text-center mt-4">
-        <h4 className="text-danger mb-3 fw-bold">
-          <i className="bi bi-stop-fill fs-6"></i> Stop Kafka Server
-        </h4>
-
-        {/* Stop Kafka Button */}
+        {/* Stop Kafka Button - START*/}
         <button
           className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
           onClick={() => {
@@ -619,17 +605,18 @@ const KafkaControls = () => {
           )}
         </button>
 
-        {/* Response Message */}
+        {/* Response Message for Stopping */}
         {stopKafkaResponse && (
           <div
-            className="alert alert-danger mt-3 fw-bold shadow-sm text-center"
+            className="alert alert-danger mt-2 fw-bold shadow-sm text-center"
             role="alert"
           >
             {stopKafkaResponse}
           </div>
         )}
       </div>
-      {/* Stop Kafka Section - END*/}
+      {/* Stop Kafka Button - END*/}
+      {/* Kafka Server Control Section - END */}
 
       {/* Create Topic Section - START*/}
       <div className="card shadow-lg p-4 border-0 text-center bg-light rounded-4 animate__animated animate__fadeIn">

@@ -914,7 +914,9 @@ const KafkaControls = () => {
             </label>
             <select
               id="consume-topic-select"
-              className="form-select shadow-sm border-danger rounded-3"
+              className={`form-select shadow-sm rounded-3 ${
+                selectedConsumeTopic ? "border-success" : "border-danger"
+              }`}
               onChange={(e) => setSelectedConsumeTopic(e.target.value)}
               value={selectedConsumeTopic}
               aria-label="Select Kafka Topic to Consume Messages"

@@ -9,9 +9,21 @@ import {
   BiCog,
   BiErrorCircle,
   BiPlay,
-  BiPlusCircle
+  BiPlusCircle,
+  BiRefresh,
 } from "react-icons/bi";
-import { AiOutlineFileAdd } from "react-icons/ai";
+import {
+  AiOutlineFileAdd,
+  AiOutlineUnorderedList,
+  AiOutlineInfoCircle,
+  AiOutlineSearch,
+  AiOutlineMail,
+  AiOutlineSend,
+  AiOutlineReload,
+  AiOutlineHistory,
+  AiFillExclamationCircle,
+} from "react-icons/ai";
+import { BsChatDotsFill } from "react-icons/bs";
 
 const KafkaControls = () => {
   const [topics, setTopics] = useState([]); // State to store the list of topics
@@ -695,10 +707,10 @@ const KafkaControls = () => {
       </div>
       {/* Create Topic Section - END */}
 
-      {/* View All Topics Section - START*/}
+      {/* View All Topics Section - START */}
       <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-          <i className="bi bi-list-task fs-5"></i> View All Kafka Topics
+          <AiOutlineUnorderedList size={24} /> View All Kafka Topics
         </h4>
 
         {/* Fetch Topics Button */}
@@ -713,7 +725,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-arrow-repeat"></i> Fetch all Topics
+              <BiRefresh size={24} /> Fetch all Topics
             </>
           )}
         </button>
@@ -739,18 +751,17 @@ const KafkaControls = () => {
             </ul>
           ) : (
             <p className="text-muted text-center fw-semibold animate__animated animate__shakeX">
-              <i className="bi bi-exclamation-circle-fill me-2"></i> No topics
-              available
+              <BiErrorCircle size={20} className="me-2" /> No topics available
             </p>
           )}
         </div>
       </div>
-      {/* View All Topics Section - END*/}
+      {/* View All Topics Section - END */}
 
-      {/* Get Topic Details Section - START*/}
+      {/* Get Topic Details Section - START */}
       <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-          <i className="bi bi-info-circle fs-5"></i> Get Topic Details
+          <AiOutlineInfoCircle size={24} /> Get Topic Details
         </h4>
 
         {/* Topic Selection Dropdown */}
@@ -799,7 +810,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-search"></i> Get Topic Details
+              <AiOutlineSearch size={24} /> Get Topic Details
             </>
           )}
         </button>
@@ -830,13 +841,13 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
-      {/* Get Topic Details Section - END*/}
+      {/* Get Topic Details Section - END */}
 
       <div>
-        {/* Publish Kafka Message Section - START*/}
+        {/* Publish Kafka Message Section - START */}
         <div className="card shadow-lg p-4 border-0 mb-2 bg-light rounded-4 animate__animated animate__fadeIn">
           <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-            <i className="bi bi-envelope-paper fs-5"></i> Publish Kafka Message
+            <AiOutlineMail size={24} /> Publish Kafka Message
           </h4>
 
           {/* Topic Selection Dropdown */}
@@ -887,7 +898,7 @@ const KafkaControls = () => {
             onClick={sendMessage}
             disabled={!selectedTopic || !message.trim()}
           >
-            <i className="bi bi-send-fill"></i> Publish Message
+            <AiOutlineSend size={24} /> Publish Message
           </button>
 
           {/* Display Response Message */}
@@ -897,12 +908,12 @@ const KafkaControls = () => {
             </div>
           )}
         </div>
-        {/* Publish Kafka Message Section - END*/}
+        {/* Publish Kafka Message Section - END */}
 
-        {/* Consume Kafka Message Section - START*/}
+        {/* Consume Kafka Message Section - START */}
         <div className="card shadow-lg p-4 border-0 mt-4 bg-light rounded-4 animate__animated animate__fadeIn">
           <h4 className="text-danger text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-            <i className="bi bi-chat-dots-fill fs-5"></i> Consume All Messages
+            <BsChatDotsFill size={24} /> Consume All Messages
           </h4>
 
           {/* Topic Selection Dropdown */}
@@ -937,7 +948,7 @@ const KafkaControls = () => {
             onClick={consumeMessages}
             disabled={!selectedConsumeTopic}
           >
-            <i className="bi bi-arrow-repeat"></i> Fetch all Messages
+            <AiOutlineReload size={24} /> Fetch all Messages
           </button>
 
           {/* Fetch Latest Message Button */}
@@ -946,7 +957,7 @@ const KafkaControls = () => {
             onClick={consumeLatestMessage}
             disabled={!selectedConsumeTopic}
           >
-            <i className="bi bi-clock-history"></i> Fetch latest Message
+            <AiOutlineHistory size={24} /> Fetch latest Message
           </button>
 
           {/* Display Response Message */}
@@ -971,12 +982,13 @@ const KafkaControls = () => {
           ) : (
             !consumeMessageResponse && (
               <p className="text-muted text-center mt-3 animate__animated animate__fadeIn">
-                <i className="bi bi-exclamation-circle-fill me-2"></i> No
+                <AiFillExclamationCircle size={20} className="me-2" /> No
                 messages available
               </p>
             )
           )}
         </div>
+        {/* Consume Kafka Message Section - END */}
       </div>
       {/* Consume Kafka Message Section - END*/}
 

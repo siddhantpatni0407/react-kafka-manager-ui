@@ -23,8 +23,7 @@ const KafkaControls = () => {
 
   // New states for Kafka Setup
   const [kafkaAutoSetupRequired, setKafkaAutoSetupRequired] = useState(false);
-  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] =
-    useState(false);
+  const [kafkaUserDefinedPathRequired, setKafkaUserDefinedPathRequired] = useState(false);
   const [kafkaUserDefinedPath, setKafkaUserDefinedPath] = useState("");
   const [setupKafkaResponse, setSetupKafkaResponse] = useState("");
 
@@ -48,6 +47,7 @@ const KafkaControls = () => {
   const [group, setGroup] = useState("");
   const [timeoutMs, setTimeoutMs] = useState(10000);
   const [responseMessage, setResponseMessage] = useState("");
+  const [partitionError, setPartitionError] = useState("");
 
   const checkKafkaHealth = async () => {
     try {
@@ -602,21 +602,31 @@ const KafkaControls = () => {
         {/* Partitions Input */}
         <div className="mb-3">
           <input
-            type="number"
+            type="text"
             className="form-control shadow-sm"
             placeholder="Enter number of partitions (optional)"
             value={partition}
-            onChange={(e) => setPartition(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d+$/.test(value) || value === "") {
+                setPartition(value);
+                setPartitionError("");
+              } else {
+                setPartition(value);
+                setPartitionError("Please enter a valid partition value..");
+              }
+            }}
             min="1"
             aria-label="Enter number of partitions"
           />
+          {partitionError && <div className="text-danger mt-1">{partitionError}</div>}
         </div>
 
         {/* Create Topic Button */}
         <button
           className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
           onClick={handleCreateTopic}
-          disabled={isCreating || isLoading}
+          disabled={!createTopicName.trim() || isCreating || isLoading}
         >
           {isCreating ? (
             <>

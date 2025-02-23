@@ -535,7 +535,7 @@ const KafkaControls = () => {
 
         {/* Setup Kafka Button */}
         <button
-          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm py-3"
+          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm py-2 rounded-3"
           onClick={async () => {
             try {
               setIsSettingUp(true);
@@ -561,7 +561,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <BiPlay size={24} /> Setup Kafka
+              <BiPlay size={22} /> Setup Kafka
             </>
           )}
         </button>

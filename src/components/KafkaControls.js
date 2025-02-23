@@ -22,8 +22,10 @@ import {
   AiOutlineReload,
   AiOutlineHistory,
   AiFillExclamationCircle,
+  AiFillCloseCircle,
 } from "react-icons/ai";
 import { BsChatDotsFill } from "react-icons/bs";
+import { FaTrashAlt, FaRegTrashAlt } from "react-icons/fa";
 
 const KafkaControls = () => {
   const [topics, setTopics] = useState([]); // State to store the list of topics
@@ -992,11 +994,10 @@ const KafkaControls = () => {
       </div>
       {/* Consume Kafka Message Section - END*/}
 
-      {/* Consume Messages with Options - START*/}
+      {/* Consume Messages with Options - START */}
       <div className="card shadow-lg p-4 border-0 mt-4">
-        <h4 className="text-danger text-center mb-3 fw-bold">
-          <i className="bi bi-chat-dots-fill fs-6"></i> Consume Messages with
-          Options
+        <h4 className="text-danger text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <BsChatDotsFill size={20} /> Consume Messages with Options
         </h4>
 
         <form>
@@ -1130,7 +1131,7 @@ const KafkaControls = () => {
             }}
             disabled={!selectedTopic}
           >
-            <i className="bi bi-arrow-repeat"></i> Fetch Messages with Options
+            <AiOutlineReload size={20} /> Fetch Messages with Options
           </button>
         </form>
 
@@ -1156,18 +1157,18 @@ const KafkaControls = () => {
         ) : (
           !responseMessage && (
             <p className="text-muted text-center mt-3">
-              <i className="bi bi-exclamation-circle-fill me-2"></i> No messages
+              <AiFillExclamationCircle size={20} className="me-2" /> No messages
               available
             </p>
           )
         )}
       </div>
-      {/* Consume Messages with Options - END*/}
+      {/* Consume Messages with Options - END */}
 
-      {/* Delete Kafka Topic Section - START*/}
+      {/* Delete Kafka Topic Section - START */}
       <div className="card shadow-lg p-4 border-0 mt-4">
-        <h4 className="text-danger text-center mb-3 fw-bold">
-          <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
+        <h4 className="text-danger text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <AiFillCloseCircle size={20} /> Delete Kafka Topic
         </h4>
 
         {/* Topic Selection Dropdown */}
@@ -1202,11 +1203,12 @@ const KafkaControls = () => {
         >
           {isDeletingTopic ? (
             <>
-              <i className="spinner-border spinner-border-sm"></i> Deleting...
+              <span className="spinner-border spinner-border-sm"></span>{" "}
+              Deleting...
             </>
           ) : (
             <>
-              <i className="bi bi-trash3-fill"></i> Delete Topic
+              <FaTrashAlt size={18} /> Delete Topic
             </>
           )}
         </button>
@@ -1221,12 +1223,12 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
-      {/* Delete Kafka Topic Section - END*/}
+      {/* Delete Kafka Topic Section - END */}
 
-      {/* Delete Logs Section - START*/}
+      {/* Delete Logs Section - START */}
       <div className="card shadow-lg p-4 border-0 mt-4">
-        <h4 className="text-danger text-center mb-3 fw-bold">
-          <i className="bi bi-trash3-fill fs-6"></i> Delete Kafka Logs
+        <h4 className="text-danger text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <FaTrashAlt size={20} /> Delete Kafka Logs
         </h4>
 
         {/* Delete Button */}
@@ -1255,11 +1257,12 @@ const KafkaControls = () => {
         >
           {isDeleting ? (
             <>
-              <i className="spinner-border spinner-border-sm"></i> Deleting...
+              <span className="spinner-border spinner-border-sm"></span>{" "}
+              Deleting...
             </>
           ) : (
             <>
-              <i className="bi bi-trash3"></i> Delete Logs
+              <FaRegTrashAlt size={18} /> Delete Logs
             </>
           )}
         </button>
@@ -1271,7 +1274,7 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
-      {/* Delete Logs Section - END*/}
+      {/* Delete Logs Section - END */}
     </div>
   );
 };

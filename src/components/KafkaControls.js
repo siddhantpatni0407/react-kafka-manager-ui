@@ -26,6 +26,8 @@ import {
 } from "react-icons/ai";
 import { BsChatDotsFill } from "react-icons/bs";
 import { FaTrashAlt, FaRegTrashAlt } from "react-icons/fa";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 const KafkaControls = () => {
   const [topics, setTopics] = useState([]); // State to store the list of topics
@@ -36,7 +38,12 @@ const KafkaControls = () => {
   const [stopKafkaResponse, setStopKafkaResponse] = useState(""); // State to store the stop Kafka response
   const [startKafkaResponse, setStartKafkaResponse] = useState(""); // State to store the start Kafka response
   const [deleteLogsResponse, setDeleteLogsResponse] = useState(""); // State to store the delete logs response
-  const [topicDetails, setTopicDetails] = useState(null); // State to store the topic details response
+  const [topicDetails, setTopicDetails] = useState({
+    topicName: "",
+    partitionCount: 0,
+    totalMessages: 0,
+    totalLag: 0,
+  });
 
   // Separate loading states for each button
   const [isStarting, setIsStarting] = useState(false);
@@ -402,6 +409,30 @@ const KafkaControls = () => {
     const url = `${API_ENDPOINTS.GET_TOPIC_DETAILS_URL}?topicName=${topicNameForDetails}`;
     handleAction(url, "GET", {}, "getDetails");
   };
+
+  // Register the necessary components
+  ChartJS.register(ArcElement, Tooltip, Legend);
+
+  // Initialize Pie Chart Data
+  const pieData = {
+    labels: ["Partitions", "Total Messages", "Total Lag"],
+    datasets: [
+      {
+        data: [0, 0, 0], // Default empty data
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+      },
+    ],
+  };
+
+  // Update Pie Chart Data Dynamically
+  if (topicDetails) {
+    pieData.datasets[0].data = [
+      topicDetails.partitionCount || 0,
+      topicDetails.totalMessages || 0,
+      topicDetails.totalLag || 0,
+    ];
+  }
 
   return (
     <div style={styles.container}>
@@ -817,29 +848,44 @@ const KafkaControls = () => {
           )}
         </button>
 
-        {/* Display Topic Details */}
-        {topicDetails && (
-          <div className="table-responsive mt-3 animate__animated animate__fadeInUp">
-            <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-sm">
-              <thead className="table-dark">
-                <tr>
-                  <th className="p-3">Topic Name</th>
-                  <th className="p-3">Partitions</th>
-                  <th className="p-3">Total Messages</th>
-                  <th className="p-3">Total Lag</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="align-middle">
-                  <td className="fw-bold text-primary">
-                    {topicDetails.topicName}
-                  </td>
-                  <td className="fw-semibold">{topicDetails.partitionCount}</td>
-                  <td className="fw-semibold">{topicDetails.totalMessages}</td>
-                  <td className="fw-semibold">{topicDetails.totalLag}</td>
-                </tr>
-              </tbody>
-            </table>
+        {/* Display Topic Details and Pie Chart Only If topicDetails Has Data */}
+        {topicDetails && topicDetails.topicName && (
+          <div className="mt-3 animate__animated animate__fadeInUp">
+            {/* Table Section */}
+            <div className="table-responsive">
+              <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-sm">
+                <thead className="table-dark">
+                  <tr>
+                    <th className="p-3">Topic Name</th>
+                    <th className="p-3">Partitions</th>
+                    <th className="p-3">Total Messages</th>
+                    <th className="p-3">Total Lag</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="align-middle">
+                    <td className="fw-bold text-primary">
+                      {topicDetails.topicName}
+                    </td>
+                    <td className="fw-semibold">
+                      {topicDetails.partitionCount}
+                    </td>
+                    <td className="fw-semibold">
+                      {topicDetails.totalMessages}
+                    </td>
+                    <td className="fw-semibold">{topicDetails.totalLag}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pie Chart Section */}
+            <div className="d-flex flex-column align-items-center mt-4">
+              <h5 className="text-center mb-3">Topic Overview</h5>
+              <div style={{ width: "300px", height: "300px" }}>
+                <Pie data={pieData} />
+              </div>
+            </div>
           </div>
         )}
       </div>

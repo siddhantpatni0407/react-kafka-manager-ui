@@ -772,6 +772,18 @@ const KafkaControls = () => {
         {/* Fetch Details Button */}
         <button
           className="btn btn-success w-100 mb-3 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
+          style={{
+            transition: "0.3s ease-in-out",
+            boxShadow: "0 4px 15px rgba(0, 255, 0, 0.3)",
+          }}
+          onMouseOver={(e) =>
+            (e.currentTarget.style.boxShadow =
+              "0 6px 20px rgba(0, 255, 0, 0.5)")
+          }
+          onMouseOut={(e) =>
+            (e.currentTarget.style.boxShadow =
+              "0 4px 15px rgba(0, 255, 0, 0.3)")
+          }
           onClick={handleGetTopicDetails}
           disabled={isLoading || !topicNameForDetails}
         >
@@ -792,20 +804,20 @@ const KafkaControls = () => {
             <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-sm">
               <thead className="table-dark">
                 <tr>
-                  <th>Topic Name</th>
-                  <th>Number of Partitions</th>
-                  <th>Total Messages</th>
-                  <th>Total Lag</th>
+                  <th className="p-3">Topic Name</th>
+                  <th className="p-3">Partitions</th>
+                  <th className="p-3">Total Messages</th>
+                  <th className="p-3">Total Lag</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="fw-semibold text-primary">
+                <tr className="align-middle">
+                  <td className="fw-bold text-primary">
                     {topicDetails.topicName}
                   </td>
-                  <td>{topicDetails.partitionCount}</td>
-                  <td>{topicDetails.totalMessages}</td>
-                  <td>{topicDetails.totalLag}</td>
+                  <td className="fw-semibold">{topicDetails.partitionCount}</td>
+                  <td className="fw-semibold">{topicDetails.totalMessages}</td>
+                  <td className="fw-semibold">{topicDetails.totalLag}</td>
                 </tr>
               </tbody>
             </table>

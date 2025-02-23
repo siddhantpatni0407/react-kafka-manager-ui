@@ -9,7 +9,9 @@ import {
   BiCog,
   BiErrorCircle,
   BiPlay,
+  BiPlusCircle
 } from "react-icons/bi";
+import { AiOutlineFileAdd } from "react-icons/ai";
 
 const KafkaControls = () => {
   const [topics, setTopics] = useState([]); // State to store the list of topics
@@ -624,10 +626,10 @@ const KafkaControls = () => {
       </div>
       {/* Kafka Server Control Section - END */}
 
-      {/* Create Topic Section - START*/}
+      {/* Create Topic Section - START */}
       <div className="card shadow-lg p-4 border-0 text-center bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-          <i className="bi bi-plus-circle fs-5"></i> Create Kafka Topic
+          <BiPlusCircle size={24} /> Create Kafka Topic
         </h4>
 
         {/* Topic Name Input */}
@@ -679,7 +681,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-file-earmark-plus"></i> Create Topic
+              <AiOutlineFileAdd size={24} /> Create Topic
             </>
           )}
         </button>
@@ -691,7 +693,7 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
-      {/* Create Topic Section - END*/}
+      {/* Create Topic Section - END */}
 
       {/* View All Topics Section - START*/}
       <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">

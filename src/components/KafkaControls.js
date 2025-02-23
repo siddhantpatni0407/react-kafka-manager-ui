@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { API_ENDPOINTS } from "./constants"; // Importing the updated constants file
+import {
+  BiPulse,
+  BiPlayCircle,
+  BiStopCircle,
+  BiServer,
+  BiCog,
+  BiErrorCircle,
+  BiPlay,
+} from "react-icons/bi";
 
 const KafkaControls = () => {
   const [topics, setTopics] = useState([]); // State to store the list of topics
@@ -410,8 +419,8 @@ const KafkaControls = () => {
 
       {/* Setup Kafka Section - START*/}
       <div className="card shadow-lg p-4 border-0">
-        <h4 className="text-primary text-center mb-4 fw-bold">
-          <i className="bi bi-gear-fill fs-6"></i> Setup Kafka
+        <h4 className="text-primary text-center mb-4 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <BiCog size={24} /> Setup Kafka
         </h4>
 
         {/* Checkboxes Row for Auto Setup & User Path */}
@@ -463,9 +472,11 @@ const KafkaControls = () => {
               aria-describedby="pathHelp"
             />
             {!isValidPath(kafkaUserDefinedPath) && (
-              <small id="pathHelp" className="text-danger">
-                <i className="bi bi-exclamation-circle me-1"></i> Please enter a
-                valid folder path.
+              <small
+                id="pathHelp"
+                className="text-danger d-flex align-items-center gap-1"
+              >
+                <BiErrorCircle /> Please enter a valid folder path.
               </small>
             )}
           </div>
@@ -473,7 +484,7 @@ const KafkaControls = () => {
 
         {/* Setup Kafka Button */}
         <button
-          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+          className="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm py-3"
           onClick={async () => {
             try {
               setIsSettingUp(true);
@@ -499,7 +510,7 @@ const KafkaControls = () => {
             </>
           ) : (
             <>
-              <i className="bi bi-play-fill"></i> Setup Kafka
+              <BiPlay size={24} /> Setup Kafka
             </>
           )}
         </button>
@@ -516,11 +527,11 @@ const KafkaControls = () => {
       {/* Kafka Server Control Section - START */}
       <div className="card shadow-lg p-4 border-0 mb-4">
         <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-          <i className="bi bi-hdd-network fs-5"></i> Kafka Server Controls
+          <BiServer size={28} /> Kafka Server Controls
         </h4>
 
         {/* Buttons Container */}
-        <div className="d-flex justify-content-center gap-3">
+        <div className="d-flex justify-content-center gap-3 flex-wrap">
           {/* Check Kafka Health Button */}
           <button
             className="btn btn-info fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg px-4 py-3"
@@ -528,12 +539,7 @@ const KafkaControls = () => {
             disabled={isCheckingHealth}
             aria-disabled={isCheckingHealth}
           >
-            <img
-              src="/icons/health-check.webp"
-              alt="Health Check"
-              width="25"
-              height="25"
-            />
+            <BiPulse size={30} />
             {isCheckingHealth ? (
               <>
                 <i className="spinner-border spinner-border-sm"></i> Checking...
@@ -553,12 +559,7 @@ const KafkaControls = () => {
             disabled={isStarting || isLoading}
             aria-disabled={isStarting || isLoading}
           >
-            <img
-              src="/icons/start-server.webp"
-              alt="Start Server"
-              width="25"
-              height="25"
-            />
+            <BiPlayCircle size={30} />
             {isStarting ? (
               <>
                 <i className="spinner-border spinner-border-sm"></i> Starting...
@@ -578,12 +579,7 @@ const KafkaControls = () => {
             disabled={isStopping || isLoading}
             aria-disabled={isStopping || isLoading}
           >
-            <img
-              src="/icons/stop-server.webp"
-              alt="Stop Server"
-              width="25"
-              height="25"
-            />
+            <BiStopCircle size={30} />
             {isStopping ? (
               <>
                 <i className="spinner-border spinner-border-sm"></i> Stopping...

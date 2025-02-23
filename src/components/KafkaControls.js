@@ -796,19 +796,19 @@ const KafkaControls = () => {
       {/* View All Topics Section - END */}
 
       {/* Get Topic Details Section - START */}
-      <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
-        <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-          <AiOutlineInfoCircle size={24} /> Get Topic Details
+      <div className="card shadow-lg p-4 border-0 bg-white rounded-4 animate__animated animate__fadeIn">
+        <h4 className="text-primary text-center mb-4 fw-bold d-flex align-items-center justify-content-center gap-2">
+          <AiOutlineInfoCircle size={26} /> Get Topic Details
         </h4>
 
         {/* Topic Selection Dropdown */}
-        <div className="mb-3 position-relative">
+        <div className="mb-4 position-relative">
           <label htmlFor="topic-dropdown" className="form-label fw-semibold">
             Select a Topic:
           </label>
           <select
             id="topic-dropdown"
-            className={`form-select shadow-sm rounded-3 ${
+            className={`form-select shadow-sm rounded-3 p-2 ${
               topicNameForDetails ? "border-success" : "border-danger"
             }`}
             value={topicNameForDetails}
@@ -828,16 +828,10 @@ const KafkaControls = () => {
           className="btn btn-success w-100 mb-3 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-lg rounded-3 animate__animated animate__pulse animate__infinite"
           style={{
             transition: "0.3s ease-in-out",
-            boxShadow: "0 4px 15px rgba(0, 255, 0, 0.3)",
+            transform: "scale(1)",
           }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.boxShadow =
-              "0 6px 20px rgba(0, 255, 0, 0.5)")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.boxShadow =
-              "0 4px 15px rgba(0, 255, 0, 0.3)")
-          }
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onClick={handleGetTopicDetails}
           disabled={isLoading || !topicNameForDetails}
         >
@@ -854,7 +848,7 @@ const KafkaControls = () => {
 
         {/* Display Topic Details and Pie Chart Only If topicDetails Has Data */}
         {topicDetails && topicDetails.topicName && (
-          <div className="mt-3 animate__animated animate__fadeInUp">
+          <div className="mt-4 animate__animated animate__fadeInUp">
             {/* Table Section */}
             <div className="table-responsive">
               <table className="table table-bordered table-hover table-striped text-center rounded-3 shadow-sm">
@@ -891,9 +885,10 @@ const KafkaControls = () => {
                   {topicDetails.topicName}
                 </span>
               </h5>
-              <div style={{ width: "250px", height: "250px" }}>
-                {" "}
-                {/* Reduced size */}
+              <div
+                className="shadow-lg p-3 bg-white rounded-4"
+                style={{ width: "240px", height: "240px" }}
+              >
                 <Pie
                   data={pieData}
                   options={{

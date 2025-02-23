@@ -77,15 +77,12 @@ const KafkaControls = () => {
       setSendMessageResponse("⚠️ Please select a topic and enter a message.");
       return;
     }
-
+  
     try {
-      const response = await axios.get(
-        API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL,
-        {
-          params: { topicName: selectedTopic, message },
-        }
-      );
-
+      const response = await axios.get(API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL, {
+        params: { topicName: selectedTopic, message },
+      });
+  
       // Update state instead of using alert
       setSendMessageResponse(`✅ ${response.data.status}`);
       setMessage(""); // Clear input field after sending
@@ -99,19 +96,13 @@ const KafkaControls = () => {
       setConsumeMessageResponse("⚠️ Please select a topic.");
       return;
     }
-
+  
     try {
-      const response = await axios.get(
-        API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL,
-        {
-          params: { topicName: selectedConsumeTopic },
-        }
-      );
-
-      if (
-        response.data.status &&
-        response.data.status.includes("No messages")
-      ) {
+      const response = await axios.get(API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL, {
+        params: { topicName: selectedConsumeTopic },
+      });
+  
+      if (response.data.status && response.data.status.includes("No messages")) {
         setConsumedMessages(""); // Clear any previously fetched messages
         setConsumeMessageResponse(
           "❌ No messages available in this topic. Please ensure messages have been pushed."
@@ -124,9 +115,7 @@ const KafkaControls = () => {
       }
     } catch (error) {
       console.error("Error consuming messages:", error);
-      setConsumeMessageResponse(
-        "❌ Failed to fetch messages. Please try again."
-      );
+      setConsumeMessageResponse("❌ Failed to fetch messages. Please try again.");
     }
   };
 
@@ -294,8 +283,9 @@ const KafkaControls = () => {
     try {
       setIsLoading(true);
       setError(""); // Reset error message on request
-
+  
       const response = await axios.get(API_ENDPOINTS.GET_TOPICS_URL);
+      console.log("Fetched topics:", response.data); // Debugging log
       setTopics(response.data); // Assuming response is the list of topics
     } catch (error) {
       if (error.response) {

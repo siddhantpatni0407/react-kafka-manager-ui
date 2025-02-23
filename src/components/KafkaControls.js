@@ -77,12 +77,15 @@ const KafkaControls = () => {
       setSendMessageResponse("⚠️ Please select a topic and enter a message.");
       return;
     }
-  
+
     try {
-      const response = await axios.get(API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL, {
-        params: { topicName: selectedTopic, message },
-      });
-  
+      const response = await axios.get(
+        API_ENDPOINTS.KAFKA_PUBLISH_MESSAGE_URL,
+        {
+          params: { topicName: selectedTopic, message },
+        }
+      );
+
       // Update state instead of using alert
       setSendMessageResponse(`✅ ${response.data.status}`);
       setMessage(""); // Clear input field after sending
@@ -96,13 +99,19 @@ const KafkaControls = () => {
       setConsumeMessageResponse("⚠️ Please select a topic.");
       return;
     }
-  
+
     try {
-      const response = await axios.get(API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL, {
-        params: { topicName: selectedConsumeTopic },
-      });
-  
-      if (response.data.status && response.data.status.includes("No messages")) {
+      const response = await axios.get(
+        API_ENDPOINTS.KAFKA_CONSUME_MESSAGE_URL,
+        {
+          params: { topicName: selectedConsumeTopic },
+        }
+      );
+
+      if (
+        response.data.status &&
+        response.data.status.includes("No messages")
+      ) {
         setConsumedMessages(""); // Clear any previously fetched messages
         setConsumeMessageResponse(
           "❌ No messages available in this topic. Please ensure messages have been pushed."
@@ -115,7 +124,9 @@ const KafkaControls = () => {
       }
     } catch (error) {
       console.error("Error consuming messages:", error);
-      setConsumeMessageResponse("❌ Failed to fetch messages. Please try again.");
+      setConsumeMessageResponse(
+        "❌ Failed to fetch messages. Please try again."
+      );
     }
   };
 
@@ -283,7 +294,7 @@ const KafkaControls = () => {
     try {
       setIsLoading(true);
       setError(""); // Reset error message on request
-  
+
       const response = await axios.get(API_ENDPOINTS.GET_TOPICS_URL);
       console.log("Fetched topics:", response.data); // Debugging log
       setTopics(response.data); // Assuming response is the list of topics
@@ -369,7 +380,7 @@ const KafkaControls = () => {
 
   return (
     <div style={styles.container}>
-      {/* Error Message at the Top */}
+      {/* Error Message at the Top  - START*/}
       {error && (
         <div
           className="alert alert-danger text-center fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2"
@@ -378,8 +389,9 @@ const KafkaControls = () => {
           <i className="bi bi-exclamation-triangle-fill fs-5"></i> {error}
         </div>
       )}
+      {/* Error Message at the Top  - END*/}
 
-      {/* Kafka Logo & Header */}
+      {/* Kafka Logo & Header  - START*/}
       <div className="text-center my-4">
         <img
           src="/kafka-logo.png"
@@ -394,8 +406,9 @@ const KafkaControls = () => {
           onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         />
       </div>
+      {/* Kafka Logo & Header  - END*/}
 
-      {/* Setup Kafka Section */}
+      {/* Setup Kafka Section - START*/}
       <div className="card shadow-lg p-4 border-0">
         <h4 className="text-primary text-center mb-4 fw-bold">
           <i className="bi bi-gear-fill fs-6"></i> Setup Kafka
@@ -498,8 +511,9 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Setup Kafka Section - END*/}
 
-      {/* Check Kafka Health Section */}
+      {/* Check Kafka Health Section - START*/}
       <div className="card shadow-lg p-4 border-0 mb-4">
         <h4 className="text-info text-center mb-3 fw-bold">
           <i className="bi bi-heart-pulse fs-6"></i> Check Kafka Health
@@ -537,8 +551,9 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Check Kafka Health Section - END*/}
 
-      {/* Start Kafka Section */}
+      {/* Start Kafka Section - START*/}
       <div className="card shadow-lg p-4 border-0 text-center">
         <h4 className="text-success mb-3 fw-bold">
           <i className="bi bi-play-fill fs-6"></i> Start Kafka Server
@@ -575,8 +590,9 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Start Kafka Section - END*/}
 
-      {/* Stop Kafka Section */}
+      {/* Stop Kafka Section - START*/}
       <div className="card shadow-lg p-4 border-0 text-center mt-4">
         <h4 className="text-danger mb-3 fw-bold">
           <i className="bi bi-stop-fill fs-6"></i> Stop Kafka Server
@@ -613,8 +629,9 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Stop Kafka Section - END*/}
 
-      {/* Create Topic Section */}
+      {/* Create Topic Section - START*/}
       <div className="card shadow-lg p-4 border-0 text-center bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
           <i className="bi bi-plus-circle fs-5"></i> Create Kafka Topic
@@ -681,8 +698,9 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Create Topic Section - END*/}
 
-      {/* View All Topics Section */}
+      {/* View All Topics Section - START*/}
       <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
           <i className="bi bi-list-task fs-5"></i> View All Kafka Topics
@@ -732,8 +750,9 @@ const KafkaControls = () => {
           )}
         </div>
       </div>
+      {/* View All Topics Section - END*/}
 
-      {/* Get Topic Details Section */}
+      {/* Get Topic Details Section - START*/}
       <div className="card shadow-lg p-4 border-0 bg-light rounded-4 animate__animated animate__fadeIn">
         <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
           <i className="bi bi-info-circle fs-5"></i> Get Topic Details
@@ -814,9 +833,10 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Get Topic Details Section - END*/}
 
       <div>
-        {/* Publish Kafka Message Section */}
+        {/* Publish Kafka Message Section - START*/}
         <div className="card shadow-lg p-4 border-0 mb-2 bg-light rounded-4 animate__animated animate__fadeIn">
           <h4 className="text-primary text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
             <i className="bi bi-envelope-paper fs-5"></i> Publish Kafka Message
@@ -876,8 +896,9 @@ const KafkaControls = () => {
             </div>
           )}
         </div>
+        {/* Publish Kafka Message Section - END*/}
 
-        {/* Consume Kafka Message Section */}
+        {/* Consume Kafka Message Section - START*/}
         <div className="card shadow-lg p-4 border-0 mt-4 bg-light rounded-4 animate__animated animate__fadeIn">
           <h4 className="text-danger text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
             <i className="bi bi-chat-dots-fill fs-5"></i> Consume All Messages
@@ -954,7 +975,9 @@ const KafkaControls = () => {
           )}
         </div>
       </div>
+      {/* Consume Kafka Message Section - END*/}
 
+      {/* Consume Messages with Options - START*/}
       <div className="card shadow-lg p-4 border-0 mt-4">
         <h4 className="text-danger text-center mb-3 fw-bold">
           <i className="bi bi-chat-dots-fill fs-6"></i> Consume Messages with
@@ -1084,13 +1107,13 @@ const KafkaControls = () => {
             </tbody>
           </table>
 
-          {/* Fetch Kafka Messages Button */}
+          {/* Fetch Kafka Messages with Options Button */}
           <button
             className="btn btn-warning w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
             onClick={consumeMessagesWithOptions}
             disabled={!selectedTopic}
           >
-            <i className="bi bi-arrow-repeat"></i> Fetch Messages
+            <i className="bi bi-arrow-repeat"></i> Fetch Messages with Options
           </button>
         </form>
 
@@ -1122,8 +1145,9 @@ const KafkaControls = () => {
           )
         )}
       </div>
+      {/* Consume Messages with Options - END*/}
 
-      {/* Delete Kafka Topic Section */}
+      {/* Delete Kafka Topic Section - START*/}
       <div className="card shadow-lg p-4 border-0 mt-4">
         <h4 className="text-danger text-center mb-3 fw-bold">
           <i className="bi bi-x-circle fs-6"></i> Delete Kafka Topic
@@ -1178,8 +1202,9 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Delete Kafka Topic Section - END*/}
 
-      {/* Delete Logs Section */}
+      {/* Delete Logs Section - START*/}
       <div className="card shadow-lg p-4 border-0 mt-4">
         <h4 className="text-danger text-center mb-3 fw-bold">
           <i className="bi bi-trash3-fill fs-6"></i> Delete Kafka Logs
@@ -1227,6 +1252,7 @@ const KafkaControls = () => {
           </div>
         )}
       </div>
+      {/* Delete Logs Section - END*/}
     </div>
   );
 };

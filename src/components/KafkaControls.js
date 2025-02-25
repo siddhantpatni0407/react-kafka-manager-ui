@@ -26,9 +26,16 @@ import {
 } from "react-icons/ai";
 import { BsChatDotsFill } from "react-icons/bs";
 import { FaTrashAlt, FaRegTrashAlt } from "react-icons/fa";
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Pie, Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
 
 const KafkaControls = () => {
   const [topics, setTopics] = useState([]); // State to store the list of topics
@@ -411,32 +418,82 @@ const KafkaControls = () => {
     handleAction(url, "GET", {}, "getDetails");
   };
 
-  // Register the necessary components
-  ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels); // Register plugins
+  // Register necessary components for Bar Chart
+  ChartJS.register(
+    BarElement,
+    ArcElement,
+    Tooltip,
+    Legend,
+    CategoryScale,
+    LinearScale
+  );
 
+  // Bar Chart Data
+  const barData = {
+    labels: ["Partitions", "Total Messages", "Total Lag"],
+    datasets: [
+      {
+        label: "Topic Metrics",
+        data: [
+          topicDetails?.partitionCount || 0,
+          topicDetails?.totalMessages || 0,
+          topicDetails?.totalLag || 0,
+        ],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        borderColor: ["#C22E43", "#215D9B", "#C19729"],
+        borderWidth: 2,
+        borderRadius: 5,
+        hoverBackgroundColor: ["#FF4C6D", "#2A92DA", "#FFB84D"],
+        hoverBorderColor: ["#B22234", "#1B4D7A", "#9E801F"],
+        barThickness: 50,
+      },
+    ],
+  };
+
+  // Pie Chart Data
   const pieData = {
     labels: ["Partitions", "Total Messages", "Total Lag"],
     datasets: [
       {
         data: [
-          topicDetails.partitionCount,
-          topicDetails.totalMessages,
-          topicDetails.totalLag,
+          topicDetails?.partitionCount || 0,
+          topicDetails?.totalMessages || 0,
+          topicDetails?.totalLag || 0,
         ],
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
         hoverBackgroundColor: ["#FF4C6D", "#2A92DA", "#FFB84D"],
+        borderWidth: 2,
       },
     ],
   };
 
-  // Update Pie Chart Data Dynamically
-  if (topicDetails) {
-    pieData.datasets[0].data = [
-      topicDetails.partitionCount || 0,
-      topicDetails.totalMessages || 0,
-      topicDetails.totalLag || 0,
-    ];
-  }
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) =>
+            `${context.dataset.label}: ${context.raw.toLocaleString()}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 14, weight: "bold" } },
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: "#ddd", borderDash: [5, 5] },
+        ticks: { font: { size: 12 } },
+      },
+    },
+  };
 
   return (
     <div style={styles.container}>
@@ -861,7 +918,7 @@ const KafkaControls = () => {
           )}
         </button>
 
-        {/* Display Topic Details and Pie Chart Only If topicDetails Has Data */}
+        {/* Display Topic Details Only If Data Exists */}
         {topicDetails && topicDetails.topicName && (
           <div className="mt-4 animate__animated animate__fadeInUp">
             {/* Table Section */}
@@ -915,52 +972,22 @@ const KafkaControls = () => {
               </table>
             </div>
 
-            {/* Pie Chart Section */}
-            <div className="d-flex flex-column align-items-center mt-4">
-              <h5 className="text-center mb-3">
-                Topic Overview:{" "}
-                <span className="text-success fw-bold">
-                  {topicDetails.topicName}
-                </span>
-              </h5>
+            {/* Charts Section - Side by Side */}
+            <div className="d-flex flex-row justify-content-center align-items-center gap-4 mt-4">
+              {/* Pie Chart */}
               <div
                 className="shadow-lg p-3 bg-white rounded-4"
-                style={{ width: "240px", height: "240px" }}
+                style={{ width: "300px", height: "300px" }}
               >
-                <Pie
-                  data={pieData}
-                  options={{
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: "top", // Keep labels on top
-                        labels: {
-                          font: {
-                            size: 12, // Smaller font for better alignment
-                          },
-                          boxWidth: 10, // Adjust icon size
-                        },
-                        align: "center", // Align labels in one line
-                        fullWidth: true, // Ensure labels span across width
-                      },
-                      datalabels: {
-                        color: "#fff",
-                        font: {
-                          weight: "bold",
-                          size: 12, // Slightly smaller labels
-                        },
-                        formatter: (value, context) => {
-                          let total = context.dataset.data.reduce(
-                            (acc, val) => acc + val,
-                            0
-                          );
-                          let percentage = ((value / total) * 100).toFixed(1);
-                          return `${percentage}%`; // Only show percentage
-                        },
-                      },
-                    },
-                  }}
-                />
+                <Pie data={pieData} />
+              </div>
+
+              {/* Bar Chart */}
+              <div
+                className="shadow-lg p-3 bg-white rounded-4"
+                style={{ width: "450px", height: "350px" }}
+              >
+                <Bar data={barData} options={barOptions} />
               </div>
             </div>
           </div>
